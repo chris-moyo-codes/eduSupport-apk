@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/app_theme.dart';
 
 class EduCard extends StatelessWidget {
   const EduCard({
@@ -7,7 +8,7 @@ class EduCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.margin,
     this.borderRadius,
-    this.elevated = true,
+    this.elevated = false,
   });
 
   final Widget child;
@@ -19,8 +20,11 @@ class EduCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shape = RoundedRectangleBorder(
-      borderRadius: borderRadius ?? BorderRadius.circular(8),
-      side: BorderSide(color: Theme.of(context).colorScheme.outline),
+      borderRadius: borderRadius ?? EduSupportTheme.radiusLg,
+      side: BorderSide(
+        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+        width: 1,
+      ),
     );
 
     return Card(

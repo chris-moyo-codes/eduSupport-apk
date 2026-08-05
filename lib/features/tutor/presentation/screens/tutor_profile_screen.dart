@@ -30,7 +30,7 @@ class TutorProfileScreen extends ConsumerWidget {
             Text(
               user?.name ?? 'Tutor Profile',
               style: textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 4),

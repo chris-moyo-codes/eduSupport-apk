@@ -60,7 +60,7 @@ class SessionsScreen extends StatelessWidget {
               Text(
                 'Upcoming',
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   color: const Color(0xFF1A202C),
                 ),
               ),
@@ -87,7 +87,7 @@ class SessionsScreen extends StatelessWidget {
                 Text(
                   'Past Sessions',
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -183,7 +183,7 @@ class _SessionCard extends StatelessWidget {
                 'TOPIC',
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 0.8,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -259,7 +259,7 @@ class _SessionCard extends StatelessWidget {
                     'TUTOR NOTES',
                     style: TextStyle(
                       fontSize: 9,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 1.0,
                       color: Color(0xFF718096),
                     ),

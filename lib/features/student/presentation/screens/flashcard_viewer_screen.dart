@@ -276,7 +276,7 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
               'Deck Complete!',
               style: TextStyle(
                 fontSize: 26,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: Color(0xFF1A202C),
               ),
             ),
@@ -363,7 +363,7 @@ class _CardFace extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 1.5,
                 color: labelColor,
               ),
@@ -415,7 +415,7 @@ class _ResultPill extends StatelessWidget {
           '$count',
           style: TextStyle(
             fontSize: 36,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: color,
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -39,7 +40,7 @@ class DashboardScreen extends StatelessWidget {
                       Text(
                         'Good morning, Student.',
                         style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
@@ -68,7 +69,7 @@ class DashboardScreen extends StatelessWidget {
                       Text(
                         'Continue Learning',
                         style: theme.textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.8,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -82,7 +83,7 @@ class DashboardScreen extends StatelessWidget {
                   Text(
                     featuredCourse.title,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -97,7 +98,7 @@ class DashboardScreen extends StatelessWidget {
                     value: featuredCourse.progress / 100,
                     backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                     color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: EduSupportTheme.radiusSm,
                     minHeight: 6,
                   ),
                   const SizedBox(height: 16),
@@ -110,7 +111,7 @@ class DashboardScreen extends StatelessWidget {
                             Text(
                               '${featuredCourse.progress}% complete',
                               style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
@@ -140,7 +141,7 @@ class DashboardScreen extends StatelessWidget {
             Text(
               'Study Activity',
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -160,7 +161,7 @@ class DashboardScreen extends StatelessWidget {
                 Text(
                   'Upcoming Session',
                   style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
@@ -201,7 +202,7 @@ class DashboardScreen extends StatelessWidget {
                           nextSession.tutorInitials,
                           style: TextStyle(
                             color: theme.colorScheme.onPrimary,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
                         ),
@@ -290,7 +291,7 @@ class DashboardScreen extends StatelessWidget {
             Text(
               'Quick Actions',
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -325,7 +326,7 @@ class DashboardScreen extends StatelessWidget {
             Text(
               'Offline Library',
               style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: theme.colorScheme.onSurface,
               ),
             ),
@@ -341,7 +342,7 @@ class DashboardScreen extends StatelessWidget {
                         height: 44,
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: EduSupportTheme.radiusLg,
                         ),
                         child: Icon(Icons.menu_book_rounded, color: theme.colorScheme.primary),
                       ),
@@ -366,7 +367,7 @@ class DashboardScreen extends StatelessWidget {
                                     value: course.progress / 100,
                                     backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                                     color: theme.colorScheme.primary,
-                                    borderRadius: BorderRadius.circular(2),
+                                    borderRadius: EduSupportTheme.radiusSm,
                                     minHeight: 4,
                                   ),
                                 ),
@@ -383,8 +384,8 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                       if (course.isDownloaded)
-                        const Icon(Icons.download_done_rounded,
-                            size: 18, color: Color(0xFF38A169)),
+                        Icon(Icons.download_done_rounded,
+                            size: 18, color: theme.colorScheme.primary),
                     ],
                   ),
                 ),

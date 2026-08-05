@@ -53,7 +53,7 @@ class TutorHomeScreen extends ConsumerWidget {
                       Text(
                         'Good morning, ${user?.name.split(' ').first ?? 'Tutor'}.',
                         style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface,
                         ),
                       ),
@@ -187,7 +187,7 @@ class _PrioritySessionCard extends ConsumerWidget {
             Text(
               DateFormat.jm().format(session.startTime),
               style: textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: colorScheme.onSurface,
               ),
             ),

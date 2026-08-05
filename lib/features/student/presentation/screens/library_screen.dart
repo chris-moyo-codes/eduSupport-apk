@@ -5,6 +5,7 @@ import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_empty_state.dart';
 import '../../../../core/widgets/edu_search_field.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
 const _allCategories = [
@@ -42,14 +43,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
     }).toList();
   }
 
-  (Color, Color, String) _offlineConfig(String status) {
+  (Color, Color, String) _offlineConfig(BuildContext context, String status) {
+    final theme = Theme.of(context);
     return switch (status) {
-      'available'         => (const Color(0xFFE6FFED), const Color(0xFF22543D), 'Offline Ready'),
-      'download_available'=> (const Color(0xFFEBF4FF), const Color(0xFF2B6CB0), 'Download'),
-      'downloading'       => (const Color(0xFFEBF8FF), const Color(0xFF2C7A7B), 'Downloading…'),
-      'pending_sync'      => (const Color(0xFFFEF3C7), const Color(0xFF92400E), 'Pending Sync'),
-      'unavailable'       => (const Color(0xFFFED7D7), const Color(0xFF9B2C2C), 'Online Only'),
-      _                   => (const Color(0xFFEEEDE8), const Color(0xFF4A5568), status),
+      'available'         => (theme.colorScheme.secondaryContainer, theme.colorScheme.onSecondaryContainer, 'Offline Ready'),
+      'download_available'=> (theme.colorScheme.surfaceContainerHigh, theme.colorScheme.onSurface, 'Download'),
+      'downloading'       => (theme.colorScheme.primaryContainer, theme.colorScheme.onPrimaryContainer, 'Downloading…'),
+      'pending_sync'      => (theme.colorScheme.tertiaryContainer, theme.colorScheme.onTertiaryContainer, 'Pending Sync'),
+      'unavailable'       => (theme.colorScheme.errorContainer, theme.colorScheme.onErrorContainer, 'Online Only'),
+      _                   => (theme.colorScheme.surfaceContainer, theme.colorScheme.onSurfaceVariant, status),
     };
   }
 
@@ -73,6 +75,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final downloaded = studentResources
         .where((r) => r.offlineStatus == 'available')
         .length;
+    final theme = Theme.of(context);
 
     return SafeArea(
       child: Column(
@@ -95,7 +98,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Container(
                       width: 1,
                       height: 24,
-                      color: const Color(0xFFE4E2DC),
+                      color: theme.colorScheme.outline.withValues(alpha: 0.5),
                     ),
                     const SizedBox(width: 8),
                     _StatPill(value: '$downloaded', label: 'Downloaded'),
@@ -125,13 +128,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               horizontal: 14, vertical: 6),
                           decoration: BoxDecoration(
                             color: active
-                                ? const Color(0xFF212B36)
-                                : const Color(0xFFFFFFFF),
-                            borderRadius: BorderRadius.circular(20),
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.surface,
+                            borderRadius: BorderRadius.circular(999),
                             border: Border.all(
                               color: active
-                                  ? const Color(0xFF212B36)
-                                  : const Color(0xFFE4E2DC),
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.outline.withValues(alpha: 0.5),
                             ),
                           ),
                           child: Text(
@@ -140,8 +143,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: active
-                                  ? Colors.white
-                                  : const Color(0xFF4A5568),
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -177,7 +180,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             padding: const EdgeInsets.only(bottom: 10),
                             child: _ResourceCard(
                               resource: r,
-                              offlineConfig: _offlineConfig(r.offlineStatus),
+                              offlineConfig: _offlineConfig(context, r.offlineStatus),
                               typeIcon: _typeIcon(r.type),
                             ),
                           ),
@@ -196,7 +199,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                             padding: const EdgeInsets.only(bottom: 10),
                             child: _ResourceCard(
                               resource: r,
-                              offlineConfig: _offlineConfig(r.offlineStatus),
+                              offlineConfig: _offlineConfig(context, r.offlineStatus),
                               typeIcon: _typeIcon(r.type),
                             ),
                           ),
@@ -218,24 +221,25 @@ class _StatPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
             text: value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A202C),
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const WidgetSpan(child: SizedBox(width: 4)),
           TextSpan(
             text: label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF718096),
+              color: theme.colorScheme.onSurfaceVariant,
               letterSpacing: 0.5,
             ),
           ),
@@ -253,23 +257,24 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(icon, size: 16, color: const Color(0xFFC05621)),
+        Icon(icon, size: 16, color: theme.colorScheme.primary),
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1A202C),
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         if (count != null) ...[
           const Spacer(),
           Text(
             '$count items',
-            style: const TextStyle(fontSize: 12, color: Color(0xFF718096)),
+            style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
       ],
@@ -308,10 +313,10 @@ class _ResourceCard extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: theme.colorScheme.surfaceContainerHigh,
+                  borderRadius: EduSupportTheme.radiusMd,
                 ),
-                child: Icon(typeIcon, size: 18, color: const Color(0xFF212B36)),
+                child: Icon(typeIcon, size: 18, color: theme.colorScheme.onSurface),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -344,7 +349,7 @@ class _ResourceCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
                   color: bgColor,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: EduSupportTheme.radiusLg,
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -411,7 +416,7 @@ class _ResourceCard extends StatelessWidget {
           ),
           if (canDownload || isAvailable) ...[
             const SizedBox(height: 12),
-            const Divider(height: 1, color: Color(0xFFE4E2DC)),
+            const Divider(height: 1),
             const SizedBox(height: 10),
             EduButton(
               label: isAvailable ? 'Open Offline' : 'Download',

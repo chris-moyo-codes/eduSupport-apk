@@ -109,63 +109,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         name: AppRoutes.onboardingName,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: const OnboardingScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: EduSupportTheme.easeEdu,
-            );
-            return FadeTransition(
-              opacity: curvedAnimation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.05),
-                  end: Offset.zero,
-                ).animate(curvedAnimation),
-                child: child,
-              ),
-            );
-          },
-        ),
+        pageBuilder: (context, state) => _buildPageWithTransition(const OnboardingScreen()),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: AppRoutes.loginName,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: const LoginScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final curvedAnimation = CurvedAnimation(
-              parent: animation,
-              curve: EduSupportTheme.easeEdu,
-            );
-            return FadeTransition(
-              opacity: curvedAnimation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.0, 0.05),
-                  end: Offset.zero,
-                ).animate(curvedAnimation),
-                child: child,
-              ),
-            );
-          },
-        ),
+        pageBuilder: (context, state) => _buildPageWithTransition(const LoginScreen()),
       ),
       GoRoute(
         path: AppRoutes.studentHome,
         name: AppRoutes.studentHomeName,
-        builder: (context, state) => const ShellScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(const ShellScreen()),
       ),
       GoRoute(
         path: AppRoutes.tutorHome,
         name: AppRoutes.tutorHomeName,
-        builder: (context, state) => const TutorShellScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(const TutorShellScreen()),
       ),
       GoRoute(
         path: AppRoutes.adminHome,
         name: AppRoutes.adminHomeName,
-        builder: (context, state) => const AdminPlaceholderScreen(),
+        pageBuilder: (context, state) => _buildPageWithTransition(const AdminPlaceholderScreen()),
       ),
       GoRoute(
         path: AppRoutes.tutors,
@@ -176,6 +140,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     errorBuilder: (context, state) => const UnknownRouteScreen(),
   );
 });
+
+Page<dynamic> _buildPageWithTransition(Widget child) {
+  return CustomTransitionPage(
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curvedAnimation = CurvedAnimation(
+        parent: animation,
+        curve: EduSupportTheme.easeEdu,
+      );
+      return FadeTransition(
+        opacity: curvedAnimation,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0.0, 0.05),
+            end: Offset.zero,
+          ).animate(curvedAnimation),
+          child: child,
+        ),
+      );
+    },
+  );
+}
 
 class UnknownRouteScreen extends StatelessWidget {
   const UnknownRouteScreen({super.key});

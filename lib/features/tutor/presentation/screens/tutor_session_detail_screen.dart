@@ -55,7 +55,7 @@ class TutorSessionDetailScreen extends ConsumerWidget {
                     Text(
                       '${DateFormat.jm().format(session.startTime)} • ${session.durationMinutes} min',
                       style: textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],

@@ -108,7 +108,7 @@ class DownloadsScreen extends StatelessWidget {
                         'Downloading',
                         style: TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: Color(0xFF1A202C),
                         ),
                       ),
@@ -132,7 +132,7 @@ class DownloadsScreen extends StatelessWidget {
                     'Pending Sync',
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF1A202C),
                     ),
                   ),
@@ -164,7 +164,7 @@ class DownloadsScreen extends StatelessWidget {
                     'Available Offline',
                     style: const TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF1A202C),
                     ),
                   ),
@@ -216,7 +216,7 @@ class DownloadsScreen extends StatelessWidget {
                   'Unavailable Offline',
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: Color(0xFFC53030),
                   ),
                 ),

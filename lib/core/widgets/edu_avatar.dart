@@ -26,7 +26,7 @@ class EduAvatar extends StatelessWidget {
         initials,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
           color: Theme.of(context).colorScheme.onPrimary,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

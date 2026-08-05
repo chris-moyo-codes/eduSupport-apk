@@ -4,6 +4,7 @@ import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_section_header.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/tutor_mock_data.dart';
 
 class TutorStudentDetailScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                   Text(
                     student.name,
                     style: textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -69,7 +70,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                       Text(
                         '${(student.progressScore * 100).toInt()}%',
                         style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: _getProgressColor(colorScheme, student.progressScore),
                         ),
                       ),
@@ -81,7 +82,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                     backgroundColor: colorScheme.surfaceContainerHighest,
                     color: _getProgressColor(colorScheme, student.progressScore),
                     minHeight: 8,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: EduSupportTheme.radiusSm,
                   ),
                 ],
               ),
@@ -133,7 +134,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
 
   Color _getProgressColor(ColorScheme colorScheme, double score) {
     if (score >= 0.8) return colorScheme.primary;
-    if (score >= 0.6) return const Color(0xFFC05621); // Warning tone
+    if (score >= 0.6) return colorScheme.secondary; // Warning tone
     return colorScheme.error;
   }
 }

@@ -43,15 +43,15 @@ class EduSupportTheme {
   // Typography
   static TextTheme _buildTextTheme(Color color) {
     return GoogleFonts.interTextTheme().copyWith(
-      headlineLarge: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w700),
-      headlineMedium: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w700),
-      headlineSmall: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w700),
+      headlineLarge: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w600),
+      headlineMedium: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w600),
+      headlineSmall: GoogleFonts.merriweather(color: color, fontWeight: FontWeight.w500),
       titleLarge: GoogleFonts.inter(color: color, fontWeight: FontWeight.w600),
-      titleMedium: GoogleFonts.inter(color: color, fontWeight: FontWeight.w600),
-      titleSmall: GoogleFonts.inter(color: color, fontWeight: FontWeight.w600),
-      bodyLarge: GoogleFonts.inter(color: color),
-      bodyMedium: GoogleFonts.inter(color: color),
-      bodySmall: GoogleFonts.inter(color: color),
+      titleMedium: GoogleFonts.inter(color: color, fontWeight: FontWeight.w500),
+      titleSmall: GoogleFonts.inter(color: color, fontWeight: FontWeight.w500),
+      bodyLarge: GoogleFonts.inter(color: color, fontWeight: FontWeight.w400),
+      bodyMedium: GoogleFonts.inter(color: color, fontWeight: FontWeight.w400),
+      bodySmall: GoogleFonts.inter(color: color, fontWeight: FontWeight.w400),
       labelLarge: GoogleFonts.inter(color: color, fontWeight: FontWeight.w500),
       labelMedium: GoogleFonts.inter(color: color, fontWeight: FontWeight.w500),
       labelSmall: GoogleFonts.inter(color: color, fontWeight: FontWeight.w500),

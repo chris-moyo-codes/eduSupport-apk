@@ -41,7 +41,7 @@ class StudyScreen extends StatelessWidget {
                     'UP NEXT FOR YOU',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 1.2,
                       color: theme.colorScheme.onPrimary.withValues(alpha: 0.6),
                     ),
@@ -51,7 +51,7 @@ class StudyScreen extends StatelessWidget {
                     deck.title,
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onPrimary,
                     ),
                   ),
@@ -100,7 +100,7 @@ class StudyScreen extends StatelessWidget {
                 Text(
                   'Suggested Activities',
                   style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
                   ),
                 ),

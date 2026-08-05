@@ -166,7 +166,7 @@ class _SectionHeader extends StatelessWidget {
           label,
           style: const TextStyle(
             fontSize: 15,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
             color: Color(0xFF1A202C),
           ),
         ),
@@ -231,7 +231,7 @@ class _TutorCard extends StatelessWidget {
                     Text(
                       tutor.name,
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -257,7 +257,7 @@ class _TutorCard extends StatelessWidget {
                     tutor.rating.toStringAsFixed(1),
                     style: const TextStyle(
                       fontSize: 13,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF1A202C),
                     ),
                   ),

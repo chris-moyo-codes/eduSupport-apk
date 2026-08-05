@@ -38,7 +38,7 @@ class EduEmptyState extends StatelessWidget {
             Text(
               title,
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 color: const Color(0xFF1A202C),
               ),
               textAlign: TextAlign.center,

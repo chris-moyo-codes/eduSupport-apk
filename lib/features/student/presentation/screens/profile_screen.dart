@@ -56,7 +56,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         Text(
                           user?.name ?? 'Unknown User',
                           style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -347,7 +347,7 @@ class _SettingsSection extends StatelessWidget {
                 title,
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),

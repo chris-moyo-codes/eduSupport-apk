@@ -48,7 +48,7 @@ class NotificationsSheet extends ConsumerWidget {
                     Text(
                       'Notifications',
                       style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     if (hasUnread)
@@ -198,7 +198,7 @@ class _NotificationTile extends StatelessWidget {
                   Text(
                     notification.title,
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: isRead ? FontWeight.w500 : FontWeight.w700,
+                      fontWeight: isRead ? FontWeight.w500 : FontWeight.w600,
                       color: isRead
                           ? theme.colorScheme.onSurface
                           : theme.colorScheme.primary,

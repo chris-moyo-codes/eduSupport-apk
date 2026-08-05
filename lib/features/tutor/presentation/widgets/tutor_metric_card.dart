@@ -66,7 +66,7 @@ class TutorMetricCard extends StatelessWidget {
           Text(
             value,
             style: textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
               color: colorScheme.onSurface,
             ),
           ),

@@ -100,7 +100,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(fakeStore.completed, isTrue);
-    expect(find.text('Your workspace awaits.'), findsOneWidget);
+    expect(find.text('Welcome to your workspace.'), findsOneWidget);
   });
 
   testWidgets('returning user skips onboarding', (tester) async {
@@ -123,6 +123,6 @@ void main() {
     );
 
     expect(find.text('Premium\nlearning support.'), findsNothing);
-    expect(find.text('Your workspace awaits.'), findsOneWidget);
+    expect(find.text('Welcome to your workspace.'), findsOneWidget);
   });
 }

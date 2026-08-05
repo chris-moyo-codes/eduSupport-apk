@@ -42,7 +42,7 @@ class TutorSessionTile extends StatelessWidget {
                 Text(
                   DateFormat.jm().format(session.startTime),
                   style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 4),
