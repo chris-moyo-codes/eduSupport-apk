@@ -56,42 +56,45 @@ class _TutorsScreenState extends State<TutorsScreen> {
                   onChanged: (v) => setState(() => _query = v),
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  children: _filterLabels.map((label) {
-                    final active = label == _activeFilter;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: GestureDetector(
-                        onTap: () => setState(() => _activeFilter = label),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: active
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.surface,
-                            borderRadius: BorderRadius.circular(999),
-                            border: Border.all(
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _filterLabels.map((label) {
+                      final active = label == _activeFilter;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () => setState(() => _activeFilter = label),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: BoxDecoration(
                               color: active
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.outline.withValues(alpha: 0.5),
+                                  : theme.colorScheme.surface,
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: active
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline.withValues(alpha: 0.5),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            label,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: active
-                                  ? theme.colorScheme.onPrimary
-                                  : theme.colorScheme.onSurface,
+                            child: Text(
+                              label,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: active
+                                    ? theme.colorScheme.onPrimary
+                                    : theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 const SizedBox(height: 12),
               ],

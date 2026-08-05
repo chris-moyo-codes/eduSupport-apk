@@ -21,7 +21,10 @@ class EduSectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
               if (subtitle != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
