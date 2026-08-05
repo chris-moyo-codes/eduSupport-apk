@@ -38,6 +38,7 @@ void main() {
       ),
     );
 
+    await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
     expect(find.text('Learn with EduSupport'), findsOneWidget);
@@ -62,6 +63,7 @@ void main() {
       ),
     );
 
+    await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -92,6 +94,7 @@ void main() {
       ),
     );
 
+    await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
     expect(find.text('Learn with EduSupport'), findsNothing);

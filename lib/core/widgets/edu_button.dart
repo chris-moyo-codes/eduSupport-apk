@@ -39,7 +39,7 @@ class EduButton extends StatelessWidget {
       EduButtonVariant.primary => FilledButton(
         onPressed: loading ? null : onPressed,
         style: FilledButton.styleFrom(
-          minimumSize: Size.fromHeight(minHeight),
+          minimumSize: Size(0, minHeight),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: _buildContent(theme),
@@ -47,7 +47,7 @@ class EduButton extends StatelessWidget {
       EduButtonVariant.secondary => ElevatedButton(
         onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          minimumSize: Size.fromHeight(minHeight),
+          minimumSize: Size(0, minHeight),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: _buildContent(theme),
@@ -55,7 +55,7 @@ class EduButton extends StatelessWidget {
       EduButtonVariant.outline => OutlinedButton(
         onPressed: loading ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          minimumSize: Size.fromHeight(minHeight),
+          minimumSize: Size(0, minHeight),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: _buildContent(theme),
@@ -63,7 +63,7 @@ class EduButton extends StatelessWidget {
       EduButtonVariant.ghost => TextButton(
         onPressed: loading ? null : onPressed,
         style: TextButton.styleFrom(
-          minimumSize: Size.fromHeight(minHeight),
+          minimumSize: Size(0, minHeight),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: _buildContent(theme),
@@ -71,7 +71,7 @@ class EduButton extends StatelessWidget {
       EduButtonVariant.destructive => FilledButton(
         onPressed: loading ? null : onPressed,
         style: FilledButton.styleFrom(
-          minimumSize: Size.fromHeight(minHeight),
+          minimumSize: Size(0, minHeight),
           backgroundColor: theme.colorScheme.error,
           foregroundColor: theme.colorScheme.onError,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

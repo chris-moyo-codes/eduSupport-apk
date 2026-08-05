@@ -13,7 +13,7 @@ class AuthGate extends ConsumerWidget {
     final authState = ref.watch(authControllerProvider);
 
     if (authState.status == AuthStatus.loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: SizedBox()));
     }
 
     if (authState.status == AuthStatus.authenticated) {
@@ -28,6 +28,6 @@ class AuthGate extends ConsumerWidget {
       });
     }
 
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return const Scaffold(body: Center(child: SizedBox()));
   }
 }

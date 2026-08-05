@@ -1,46 +1,36 @@
 import 'package:flutter/material.dart';
 
-enum EduBadgeTone { neutral, success, warning, error, info }
+enum EduBadgeTone { neutral, info, success, warning, error }
 
 class EduBadge extends StatelessWidget {
-  const EduBadge({
-    super.key,
-    required this.label,
-    this.tone = EduBadgeTone.neutral,
-  });
+  const EduBadge({super.key, required this.label, this.tone = EduBadgeTone.neutral});
 
   final String label;
   final EduBadgeTone tone;
 
   @override
   Widget build(BuildContext context) {
-    final color = switch (tone) {
-      EduBadgeTone.neutral => Theme.of(context).colorScheme.outlineVariant,
-      EduBadgeTone.success => Theme.of(context).colorScheme.primary,
-      EduBadgeTone.warning => Theme.of(context).colorScheme.secondary,
-      EduBadgeTone.error => Theme.of(context).colorScheme.error,
-      EduBadgeTone.info => Theme.of(context).colorScheme.tertiary,
-    };
-
-    final foreground = switch (tone) {
-      EduBadgeTone.neutral => Theme.of(context).colorScheme.onSurface,
-      EduBadgeTone.success => Theme.of(context).colorScheme.onPrimary,
-      EduBadgeTone.warning => Theme.of(context).colorScheme.onSecondary,
-      EduBadgeTone.error => Theme.of(context).colorScheme.onError,
-      EduBadgeTone.info => Theme.of(context).colorScheme.onTertiary,
+    final (bg, fg) = switch (tone) {
+      EduBadgeTone.neutral  => (const Color(0xFFEEEDE8), const Color(0xFF4A5568)),
+      EduBadgeTone.info     => (const Color(0xFFEBF4FF), const Color(0xFF2B6CB0)),
+      EduBadgeTone.success  => (const Color(0xFFE6FFED), const Color(0xFF22543D)),
+      EduBadgeTone.warning  => (const Color(0xFFFEF3C7), const Color(0xFF92400E)),
+      EduBadgeTone.error    => (const Color(0xFFFED7D7), const Color(0xFF9B2C2C)),
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(999),
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: foreground,
-          fontWeight: FontWeight.w700,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: fg,
+          letterSpacing: 0.2,
         ),
       ),
     );

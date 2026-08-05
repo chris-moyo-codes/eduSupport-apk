@@ -9,6 +9,7 @@ import '../../features/auth/presentation/screens/auth_gate.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/student/presentation/screens/tutors_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authControllerProvider);
@@ -77,6 +78,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ShellScreen(),
       ),
       GoRoute(
+        path: AppRoutes.tutors,
+        name: AppRoutes.tutorsName,
+        builder: (context, state) => const TutorsScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.rolePicker,
         name: AppRoutes.rolePickerName,
         builder: (context, state) => const RolePickerScreen(),
@@ -112,6 +118,8 @@ class AppRoutes {
   static const loginName = 'login';
   static const home = '/home';
   static const homeName = 'home';
+  static const tutors = '/tutors';
+  static const tutorsName = 'tutors';
   static const rolePicker = '/role-picker';
   static const rolePickerName = 'role-picker';
 }

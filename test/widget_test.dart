@@ -39,6 +39,7 @@ void main() {
         child: const EduSupportApp(),
       ),
     );
+    await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
     expect(find.text('Learn with EduSupport'), findsOneWidget);

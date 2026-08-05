@@ -1,131 +1,125 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../app/router/app_router.dart';
 import '../../../../core/widgets/edu_avatar.dart';
-import '../../../../core/widgets/edu_badge.dart';
-import '../../../../core/widgets/edu_card.dart';
-import '../../../../core/widgets/edu_button.dart';
-import '../../../auth/application/auth_controller.dart';
+import '../../../student/presentation/screens/dashboard_screen.dart';
+import '../../../student/presentation/screens/downloads_screen.dart';
+import '../../../student/presentation/screens/library_screen.dart';
+import '../../../student/presentation/screens/profile_screen.dart';
+import '../../../student/presentation/screens/sessions_screen.dart';
+import '../../../student/presentation/screens/study_screen.dart';
+import '../../../student/presentation/screens/tutors_screen.dart';
 
-class ShellScreen extends ConsumerWidget {
+/// Titles for each bottom-nav tab.
+const _tabTitles = ['Overview', 'Library', 'Study', 'Tutors', 'Profile'];
+
+class ShellScreen extends ConsumerStatefulWidget {
   const ShellScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final role = ref.watch(mockRoleProvider);
+  ConsumerState<ShellScreen> createState() => _ShellScreenState();
+}
+
+class _ShellScreenState extends ConsumerState<ShellScreen> {
+  int _selectedIndex = 0;
+
+  void _openSessions() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const SessionsScreen()),
+    );
+  }
+
+  void _openDownloads() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => const DownloadsScreen()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screens = <Widget>[
+      DashboardScreen(
+        onOpenSessions: _openSessions,
+        onOpenTutors: () => setState(() => _selectedIndex = 3),
+        onOpenLibrary: () => setState(() => _selectedIndex = 1),
+      ),
+      const LibraryScreen(),
+      const StudyScreen(),
+      const TutorsScreen(),
+      ProfileScreen(onOpenDownloads: _openDownloads),
+    ];
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F0EC),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFFFFFFF),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: Text(
-          'EduSupport ${role.name[0].toUpperCase()}${role.name.substring(1)}',
+          _tabTitles[_selectedIndex],
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1A202C),
+          ),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: EduAvatar(initials: role.name.substring(0, 1).toUpperCase()),
+            padding: const EdgeInsets.only(right: 14),
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedIndex = 4),
+              child: const EduAvatar(initials: 'SD', size: 34),
+            ),
           ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Premium mobile foundation',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Design system tokens, reusable widgets, and the mobile application shell are now in place.',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        EduBadge(
-                          label: 'Role: ${role.name}',
-                          tone: EduBadgeTone.info,
-                        ),
-                        const EduBadge(
-                          label: 'Mock local state',
-                          tone: EduBadgeTone.success,
-                        ),
-                        const EduBadge(
-                          label: 'Frontend only',
-                          tone: EduBadgeTone.neutral,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    EduCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Current shell',
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'This placeholder destination proves the app shell, role-aware navigation, and shared UI foundation.',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: EduButton(
-                                  label: 'Switch role',
-                                  variant: EduButtonVariant.secondary,
-                                  onPressed: () =>
-                                      context.go(AppRoutes.rolePicker),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+      body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: NavigationBar(
-        destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.home_rounded),
+        backgroundColor: const Color(0xFFFFFFFF),
+        indicatorColor: const Color(0xFF212B36).withValues(alpha: 0.08),
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() => _selectedIndex = index);
+        },
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.book_rounded),
+          NavigationDestination(
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book_rounded),
             label: 'Library',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.calendar_month_rounded),
-            label: 'Sessions',
+          NavigationDestination(
+            icon: Icon(Icons.auto_stories_outlined),
+            selectedIcon: Icon(Icons.auto_stories_rounded),
+            label: 'Study',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.person_rounded),
+          NavigationDestination(
+            icon: Icon(Icons.people_alt_outlined),
+            selectedIcon: Icon(Icons.people_alt_rounded),
+            label: 'Tutors',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            selectedIcon: Icon(Icons.person_rounded),
             label: 'Profile',
           ),
         ],
       ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton.extended(
+              onPressed: _openSessions,
+              backgroundColor: const Color(0xFF212B36),
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.calendar_month_rounded),
+              label: const Text('Sessions'),
+            )
+          : null,
     );
   }
 }
