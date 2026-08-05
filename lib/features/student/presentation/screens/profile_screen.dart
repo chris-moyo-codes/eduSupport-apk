@@ -87,7 +87,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             // ── Learning Preferences ──────────────────────────────────────────
             _SettingsSection(
@@ -141,7 +141,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 24),
 
             // ── Offline & Storage ─────────────────────────────────────────────
             _SettingsSection(
@@ -177,7 +177,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 24),
 
             // ── Notifications ─────────────────────────────────────────────────
             _SettingsSection(
@@ -203,7 +203,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 24),
 
             // ── Appearance ────────────────────────────────────────────────────
             _SettingsSection(
@@ -263,7 +263,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 24),
 
             // ── Account ───────────────────────────────────────────────────────
             _SettingsSection(

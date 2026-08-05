@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
 /// Interactive flashcard viewer with card flip animation.
@@ -32,7 +33,7 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
     );
     _frontRotation = TweenSequence<double>([
       TweenSequenceItem(
-          tween: Tween(begin: 0, end: -0.5), weight: 50),
+          tween: Tween(begin: 0.0, end: -0.5), weight: 50),
       TweenSequenceItem(
           tween: ConstantTween(-0.5), weight: 50),
     ]).animate(_flipController);
@@ -40,7 +41,7 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
       TweenSequenceItem(
           tween: ConstantTween(0.5), weight: 50),
       TweenSequenceItem(
-          tween: Tween(begin: 0.5, end: 0), weight: 50),
+          tween: Tween(begin: 0.5, end: 0.0), weight: 50),
     ]).animate(_flipController);
 
     for (final card in widget.deck.cards) {
@@ -87,20 +88,14 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
     final total = widget.deck.cards.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0EC),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
         title: Text(
           widget.deck.title,
-          style: const TextStyle(
+          style: theme.textTheme.titleMedium?.copyWith(
             fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A202C),
           ),
         ),
-        leading: const BackButton(color: Color(0xFF1A202C)),
       ),
       body: _isDone ? _buildDoneState(context, total) : _buildCardView(context, total, theme),
     );
@@ -135,12 +130,12 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
             ),
             const SizedBox(height: 8),
             ClipRRect(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: EduSupportTheme.radiusSm,
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 4,
-                backgroundColor: const Color(0xFFE4E2DC),
-                valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF212B36)),
+                backgroundColor: theme.colorScheme.outline.withValues(alpha: 0.3),
+                valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
               ),
             ),
             const SizedBox(height: 28),
@@ -168,8 +163,8 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
                         content: _currentCard.front,
                         label: 'QUESTION',
                         isVisible: _showingFront,
-                        backgroundColor: const Color(0xFFFFFFFF),
-                        labelColor: const Color(0xFF718096),
+                        backgroundColor: theme.colorScheme.surface,
+                        labelColor: theme.colorScheme.onSurfaceVariant,
                         hint: 'Tap to reveal answer',
                       ),
                     ),
@@ -190,9 +185,9 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
                         content: _currentCard.back,
                         label: 'ANSWER',
                         isVisible: !_showingFront,
-                        backgroundColor: const Color(0xFF212B36),
-                        labelColor: const Color(0x70FFFFFF),
-                        textColor: Colors.white,
+                        backgroundColor: theme.colorScheme.primary,
+                        labelColor: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
+                        textColor: theme.colorScheme.onPrimary,
                         hint: null,
                       ),
                     ),
@@ -213,11 +208,11 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
                       icon: const Icon(Icons.refresh_rounded, size: 18),
                       label: const Text('Review Again'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFFC05621),
-                        side: const BorderSide(color: Color(0xFFC05621)),
+                        foregroundColor: theme.colorScheme.secondary,
+                        side: BorderSide(color: theme.colorScheme.secondary),
                         minimumSize: const Size(0, 52),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: EduSupportTheme.radiusLg),
                       ),
                     ),
                   ),
@@ -228,11 +223,11 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
                       icon: const Icon(Icons.check_rounded, size: 18),
                       label: const Text('Got it!'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFF38A169),
-                        foregroundColor: Colors.white,
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.onPrimary,
                         minimumSize: const Size(0, 52),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: EduSupportTheme.radiusLg),
                       ),
                     ),
                   ),
@@ -246,8 +241,8 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(0, 52),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    side: const BorderSide(color: Color(0xFFE4E2DC)),
+                        borderRadius: EduSupportTheme.radiusLg),
+                    side: BorderSide(color: theme.colorScheme.outline),
                   ),
                   child: const Text('Reveal Answer'),
                 ),
@@ -260,6 +255,7 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
   }
 
   Widget _buildDoneState(BuildContext context, int total) {
+    final theme = Theme.of(context);
     final known = _cardStatuses.values.where((s) => s == 'known').length;
     final review = _cardStatuses.values.where((s) => s == 'review').length;
 
@@ -269,30 +265,30 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.celebration_rounded,
-                size: 64, color: Color(0xFFC05621)),
+            Icon(Icons.celebration_rounded,
+                size: 64, color: theme.colorScheme.secondary),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Deck Complete!',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF1A202C),
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'You reviewed all $total cards in ${widget.deck.title}.',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: Color(0xFF718096)),
+              style: TextStyle(fontSize: 15, color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _ResultPill(count: known, label: 'Known', color: const Color(0xFF38A169)),
+                _ResultPill(count: known, label: 'Known', color: theme.colorScheme.primary),
                 const SizedBox(width: 24),
-                _ResultPill(count: review, label: 'Review', color: const Color(0xFFC05621)),
+                _ResultPill(count: review, label: 'Review', color: theme.colorScheme.secondary),
               ],
             ),
             const SizedBox(height: 40),
@@ -301,11 +297,11 @@ class _FlashcardViewerScreenState extends State<FlashcardViewerScreen>
               child: FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFF212B36),
-                  foregroundColor: Colors.white,
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
                   minimumSize: const Size(0, 52),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: EduSupportTheme.radiusLg),
                 ),
                 child: const Text('Back to Study'),
               ),
@@ -345,7 +341,7 @@ class _CardFace extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: EduSupportTheme.radiusXl,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -376,7 +372,7 @@ class _CardFace extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 height: 1.5,
-                color: textColor ?? const Color(0xFF1A202C),
+                color: textColor ?? Theme.of(context).colorScheme.onSurface,
               ),
             ),
             if (hint != null) ...[
@@ -421,9 +417,9 @@ class _ResultPill extends StatelessWidget {
         ),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: Color(0xFF718096),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w500,
           ),
         ),

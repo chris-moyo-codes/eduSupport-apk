@@ -10,12 +10,14 @@ class EduBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     final (bg, fg) = switch (tone) {
-      EduBadgeTone.neutral  => (const Color(0xFFEEEDE8), const Color(0xFF4A5568)),
-      EduBadgeTone.info     => (const Color(0xFFEBF4FF), const Color(0xFF2B6CB0)),
-      EduBadgeTone.success  => (const Color(0xFFE6FFED), const Color(0xFF22543D)),
-      EduBadgeTone.warning  => (const Color(0xFFFEF3C7), const Color(0xFF92400E)),
-      EduBadgeTone.error    => (const Color(0xFFFED7D7), const Color(0xFF9B2C2C)),
+      EduBadgeTone.neutral  => (cs.surfaceContainerHigh, cs.onSurfaceVariant),
+      EduBadgeTone.info     => (cs.primaryContainer,     cs.onPrimaryContainer),
+      EduBadgeTone.success  => (cs.secondaryContainer,   cs.onSecondaryContainer),
+      EduBadgeTone.warning  => (cs.tertiaryContainer,    cs.onTertiaryContainer),
+      EduBadgeTone.error    => (cs.errorContainer,       cs.onErrorContainer),
     };
 
     return Container(

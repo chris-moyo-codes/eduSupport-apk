@@ -37,6 +37,7 @@ class _TutorsScreenState extends State<TutorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final filtered = _filtered;
     final featured = filtered.where((t) => t.featured).toList();
     final others = filtered.where((t) => !t.featured).toList();
@@ -68,13 +69,13 @@ class _TutorsScreenState extends State<TutorsScreen> {
                               horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
                             color: active
-                                ? const Color(0xFF212B36)
-                                : const Color(0xFFFFFFFF),
-                            borderRadius: BorderRadius.circular(20),
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.surface,
+                            borderRadius: BorderRadius.circular(999),
                             border: Border.all(
                               color: active
-                                  ? const Color(0xFF212B36)
-                                  : const Color(0xFFE4E2DC),
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.outline.withValues(alpha: 0.5),
                             ),
                           ),
                           child: Text(
@@ -83,8 +84,8 @@ class _TutorsScreenState extends State<TutorsScreen> {
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: active
-                                  ? Colors.white
-                                  : const Color(0xFF4A5568),
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -113,7 +114,6 @@ class _TutorsScreenState extends State<TutorsScreen> {
                         _SectionHeader(
                           icon: Icons.verified_rounded,
                           label: 'Top-Rated Tutors',
-                          color: const Color(0xFF38A169),
                         ),
                         const SizedBox(height: 10),
                         ...featured.map(
@@ -150,24 +150,23 @@ class _SectionHeader extends StatelessWidget {
   const _SectionHeader({
     required this.icon,
     required this.label,
-    this.color = const Color(0xFFC05621),
   });
   final IconData icon;
   final String label;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(icon, size: 16, color: color),
+        Icon(icon, size: 16, color: theme.colorScheme.secondary),
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1A202C),
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ],
@@ -179,19 +178,16 @@ class _TutorCard extends StatelessWidget {
   const _TutorCard({required this.tutor});
   final StudentTutor tutor;
 
-  (Color dotColor, String label, Color labelColor) _availConfig() {
-    return switch (tutor.availability) {
-      'available' => (const Color(0xFF38A169), 'Available now', const Color(0xFF38A169)),
-      'busy'      => (const Color(0xFFD69E2E), 'In a session', const Color(0xFFD69E2E)),
-      _           => (const Color(0xFFA0AEC0), 'Offline', const Color(0xFFA0AEC0)),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final (dotColor, availLabel, availLabelColor) = _availConfig();
     final isOffline = tutor.availability == 'offline';
+
+    final (dotColor, availLabel) = switch (tutor.availability) {
+      'available' => (theme.colorScheme.primary,   'Available now'),
+      'busy'      => (theme.colorScheme.secondary,  'In a session'),
+      _           => (theme.colorScheme.outline,     'Offline'),
+    };
 
     return EduCard(
       child: Column(
@@ -215,7 +211,7 @@ class _TutorCard extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: dotColor,
                         border: Border.all(
-                          color: Colors.white,
+                          color: theme.colorScheme.surface,
                           width: 2,
                         ),
                       ),
@@ -240,7 +236,7 @@ class _TutorCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: availLabelColor,
+                        color: dotColor,
                       ),
                     ),
                   ],
@@ -250,15 +246,15 @@ class _TutorCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.star_rounded,
-                      size: 14, color: Color(0xFFD69E2E)),
+                  Icon(Icons.star_rounded,
+                      size: 14, color: theme.colorScheme.secondary),
                   const SizedBox(width: 3),
                   Text(
                     tutor.rating.toStringAsFixed(1),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A202C),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -318,7 +314,7 @@ class _TutorCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 14),
-          const Divider(height: 1, color: Color(0xFFE4E2DC)),
+          const Divider(height: 1),
           const SizedBox(height: 12),
 
           // Action button

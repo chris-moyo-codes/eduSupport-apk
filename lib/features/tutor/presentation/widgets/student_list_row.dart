@@ -100,7 +100,7 @@ class StudentListRow extends StatelessWidget {
 
   Color _getProgressColor(ColorScheme colorScheme, double score) {
     if (score >= 0.8) return colorScheme.primary;
-    if (score >= 0.6) return const Color(0xFFC05621); // Warning tone
+    if (score >= 0.6) return colorScheme.secondary; // Warning tone
     return colorScheme.error;
   }
 }

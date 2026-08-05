@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_section_header.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 import 'flashcard_viewer_screen.dart';
 
@@ -32,7 +33,7 @@ class StudyScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: EduSupportTheme.radiusXl,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +82,7 @@ class StudyScreen extends StatelessWidget {
                         foregroundColor: theme.colorScheme.primary,
                         minimumSize: const Size(0, 48),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                            borderRadius: EduSupportTheme.radiusLg),
                         elevation: 0,
                       ),
                     ),
@@ -119,7 +120,7 @@ class StudyScreen extends StatelessWidget {
                         height: 44,
                         decoration: BoxDecoration(
                           color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: EduSupportTheme.radiusLg,
                         ),
                         child: Icon(Icons.book_outlined, color: theme.colorScheme.primary),
                       ),
@@ -148,7 +149,7 @@ class StudyScreen extends StatelessWidget {
                               value: item.progress / 100,
                               backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
                               color: theme.colorScheme.primary,
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: EduSupportTheme.radiusSm,
                               minHeight: 4,
                             ),
                           ],

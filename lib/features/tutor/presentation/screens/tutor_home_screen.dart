@@ -84,7 +84,7 @@ class TutorHomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               _PrioritySessionCard(session: nextSession),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
             ],
 
             // ── Metrics ──────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ class TutorHomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
 
             // ── Action Required ─────────────────────────────────────────────
             if (needsAttentionStudents.isNotEmpty) ...[

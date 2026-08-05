@@ -57,7 +57,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             // ── Featured Course Hero ──────────────────────────────────────────
             EduCard(
@@ -135,7 +135,7 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
 
             // ── Study Activity ────────────────────────────────────────────────
             Text(
@@ -153,7 +153,7 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
 
             // ── Upcoming Session ──────────────────────────────────────────────
             Row(
@@ -285,7 +285,7 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
 
             // ── Quick Actions ─────────────────────────────────────────────────
             Text(
@@ -320,7 +320,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
 
             // ── Offline Library ───────────────────────────────────────────────
             Text(

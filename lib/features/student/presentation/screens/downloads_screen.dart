@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_empty_state.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
 class DownloadsScreen extends StatelessWidget {
@@ -25,20 +26,12 @@ class DownloadsScreen extends StatelessWidget {
     final storageFraction = usedMb / totalMb;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0EC),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
+        title: Text(
           'Offline Library',
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A202C),
-          ),
+          style: theme.textTheme.titleMedium?.copyWith(fontSize: 17),
         ),
-        leading: const BackButton(color: Color(0xFF1A202C)),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -62,8 +55,8 @@ class DownloadsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.storage_rounded,
-                            size: 16, color: Color(0xFF718096)),
+                        Icon(Icons.storage_rounded,
+                            size: 16, color: theme.colorScheme.onSurfaceVariant),
                         const SizedBox(width: 6),
                         Text(
                           'Storage Used',
@@ -82,13 +75,13 @@ class DownloadsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: EduSupportTheme.radiusMd,
                       child: LinearProgressIndicator(
                         value: storageFraction,
                         minHeight: 8,
-                        backgroundColor: const Color(0xFFE4E2DC),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                            Color(0xFF212B36)),
+                        backgroundColor: theme.colorScheme.outline.withValues(alpha: 0.3),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            theme.colorScheme.primary),
                       ),
                     ),
                   ],
@@ -99,21 +92,19 @@ class DownloadsScreen extends StatelessWidget {
 
               // ── Downloading ───────────────────────────────────────────────
               if (downloading.isNotEmpty) ...[
-                _SectionHeader(
-                  child: Row(
-                    children: [
-                      _PulseDot(color: const Color(0xFF212B36)),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'Downloading',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A202C),
-                        ),
+                Row(
+                  children: [
+                    _PulseDot(color: theme.colorScheme.primary),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Downloading',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 ...downloading.map(
@@ -127,14 +118,12 @@ class DownloadsScreen extends StatelessWidget {
 
               // ── Pending Sync ──────────────────────────────────────────────
               if (pending.isNotEmpty) ...[
-                const _SectionHeader(
-                  child: Text(
-                    'Pending Sync',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A202C),
-                    ),
+                Text(
+                  'Pending Sync',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -157,15 +146,15 @@ class DownloadsScreen extends StatelessWidget {
               // ── Available Offline ─────────────────────────────────────────
               Row(
                 children: [
-                  const Icon(Icons.folder_rounded,
-                      size: 16, color: Color(0xFF718096)),
+                  Icon(Icons.folder_rounded,
+                      size: 16, color: theme.colorScheme.onSurfaceVariant),
                   const SizedBox(width: 6),
                   Text(
                     'Available Offline',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A202C),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -183,7 +172,7 @@ class DownloadsScreen extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(0, 36),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        foregroundColor: const Color(0xFFC53030),
+                        foregroundColor: theme.colorScheme.error,
                       ),
                       child: const Text(
                         'Remove all',
@@ -212,12 +201,12 @@ class DownloadsScreen extends StatelessWidget {
 
               // ── Unavailable Offline ───────────────────────────────────────
               if (unavailable.isNotEmpty) ...[
-                const Text(
+                Text(
                   'Unavailable Offline',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFFC53030),
+                    color: theme.colorScheme.error,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -241,14 +230,6 @@ class DownloadsScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.child});
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => child;
 }
 
 class _PulseDot extends StatefulWidget {
@@ -312,25 +293,15 @@ class _DownloadItem extends StatelessWidget {
     };
   }
 
-  Color get _statusColor {
-    return switch (resource.offlineStatus) {
-      'available'          => const Color(0xFF38A169),
-      'download_available' => const Color(0xFF2B6CB0),
-      'downloading'        => const Color(0xFF2C7A7B),
-      'pending_sync'       => const Color(0xFFD69E2E),
-      'unavailable'        => const Color(0xFFC53030),
-      _                    => const Color(0xFF718096),
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final statusColor = _resolveStatusColor(theme.colorScheme);
 
     return EduCard(
       child: Row(
         children: [
-          Icon(_statusIcon, size: 20, color: _statusColor),
+          Icon(_statusIcon, size: 20, color: statusColor),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -355,25 +326,36 @@ class _DownloadItem extends StatelessWidget {
             ),
           ),
           if (resource.offlineStatus == 'downloading')
-            const SizedBox(
+            SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
                 value: 0.7,
                 strokeWidth: 2,
                 valueColor:
-                    AlwaysStoppedAnimation<Color>(Color(0xFF2C7A7B)),
+                    AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
               ),
             ),
           if (resource.offlineStatus == 'available')
             IconButton(
-              icon: const Icon(Icons.delete_outline_rounded,
-                  size: 18, color: Color(0xFFA0AEC0)),
+              icon: Icon(Icons.delete_outline_rounded,
+                  size: 18, color: theme.colorScheme.outline),
               onPressed: () {},
               tooltip: 'Remove',
             ),
         ],
       ),
     );
+  }
+
+  Color _resolveStatusColor(ColorScheme cs) {
+    return switch (resource.offlineStatus) {
+      'available'          => cs.primary,
+      'download_available' => cs.secondary,
+      'downloading'        => cs.primary,
+      'pending_sync'       => cs.secondary,
+      'unavailable'        => cs.error,
+      _                    => cs.onSurfaceVariant,
+    };
   }
 }

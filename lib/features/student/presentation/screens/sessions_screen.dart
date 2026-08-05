@@ -5,6 +5,7 @@ import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_empty_state.dart';
+import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
 class SessionsScreen extends StatelessWidget {
@@ -19,30 +20,22 @@ class SessionsScreen extends StatelessWidget {
         studentSessions.where((s) => s.status == 'completed').toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0EC),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
+        title: Text(
           'Your Sessions',
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A202C),
-          ),
+          style: theme.textTheme.titleMedium?.copyWith(fontSize: 17),
         ),
-        leading: const BackButton(color: Color(0xFF1A202C)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 14),
             child: TextButton(
               onPressed: () {},
-              child: const Text(
+              child: Text(
                 'Find a Tutor',
                 style: TextStyle(
                   fontSize: 13,
-                  color: Color(0xFFC05621),
+                  color: theme.colorScheme.secondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -61,7 +54,6 @@ class SessionsScreen extends StatelessWidget {
                 'Upcoming',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1A202C),
                 ),
               ),
               const SizedBox(height: 12),
@@ -162,9 +154,9 @@ class _SessionCard extends StatelessWidget {
                       width: 7,
                       height: 7,
                       margin: const EdgeInsets.only(right: 5),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0xFF38A169),
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   EduBadge(label: badgeLabel, tone: badgeTone),
@@ -208,8 +200,8 @@ class _SessionCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.calendar_today_rounded,
-                      size: 13, color: Color(0xFF718096)),
+                  Icon(Icons.calendar_today_rounded,
+                      size: 13, color: theme.colorScheme.onSurfaceVariant),
                   const SizedBox(width: 4),
                   Text(
                     session.date,
@@ -222,8 +214,8 @@ class _SessionCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.schedule_rounded,
-                      size: 13, color: Color(0xFF718096)),
+                  Icon(Icons.schedule_rounded,
+                      size: 13, color: theme.colorScheme.onSurfaceVariant),
                   const SizedBox(width: 4),
                   Text(
                     '${session.time} · ${session.durationMinutes} min',
@@ -243,11 +235,11 @@ class _SessionCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F1),
-                borderRadius: BorderRadius.circular(8),
-                border: const Border(
+                color: theme.colorScheme.surfaceContainerLow,
+                borderRadius: EduSupportTheme.radiusLg,
+                border: Border(
                   left: BorderSide(
-                    color: Color(0xFFC8C5BC),
+                    color: theme.colorScheme.outlineVariant,
                     width: 3,
                   ),
                 ),
@@ -255,13 +247,13 @@ class _SessionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'TUTOR NOTES',
                     style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.0,
-                      color: Color(0xFF718096),
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -275,7 +267,7 @@ class _SessionCard extends StatelessWidget {
           ],
 
           const SizedBox(height: 14),
-          const Divider(height: 1, color: Color(0xFFE4E2DC)),
+          const Divider(height: 1),
           const SizedBox(height: 12),
 
           // Actions
