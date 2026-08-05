@@ -7,6 +7,8 @@ import '../../features/app_shell/presentation/screens/shell_screen.dart';
 import '../../features/auth/application/auth_controller.dart';
 import '../../features/auth/presentation/screens/auth_gate.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/registration_screen.dart';
+import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/student/presentation/screens/tutors_screen.dart';
@@ -65,6 +67,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (authState.isAuthenticated) {
         // If they try to go to login, splash, or onboarding, redirect to their role's home.
         if (location == AppRoutes.login ||
+            location == AppRoutes.register ||
+            location == AppRoutes.forgotPassword ||
             location == AppRoutes.splash ||
             location == AppRoutes.onboarding) {
           return getHomeRouteForRole(authState.role);
@@ -92,8 +96,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return AppRoutes.login;
       }
 
-      // Allow access to login if unauthenticated
-      if (location == AppRoutes.login) {
+      // Allow access to auth screens if unauthenticated
+      if (location == AppRoutes.login || 
+          location == AppRoutes.register || 
+          location == AppRoutes.forgotPassword) {
         return null;
       }
 
@@ -115,6 +121,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.login,
         name: AppRoutes.loginName,
         pageBuilder: (context, state) => _buildPageWithTransition(const LoginScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.register,
+        name: AppRoutes.registerName,
+        pageBuilder: (context, state) => _buildPageWithTransition(const RegistrationScreen()),
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: AppRoutes.forgotPasswordName,
+        pageBuilder: (context, state) => _buildPageWithTransition(const ForgotPasswordScreen()),
       ),
       GoRoute(
         path: AppRoutes.studentHome,

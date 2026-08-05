@@ -75,22 +75,22 @@ class EduUser {
 
 // ─── Demo Registry (mirrors web's auth-context.tsx) ──────────────────────────
 
-const _demoUsers = <String, EduUser>{
-  'student@edusupport.demo': EduUser(
+final _demoUsers = <String, EduUser>{
+  'student@edusupport.demo': const EduUser(
     id: 'u_student_1',
     name: 'Jonathan Doe',
     email: 'student@edusupport.demo',
     initials: 'JD',
     role: EduRole.student,
   ),
-  'tutor@edusupport.demo': EduUser(
+  'tutor@edusupport.demo': const EduUser(
     id: 'u_tutor_1',
     name: 'Dr. Amara Nkosi',
     email: 'tutor@edusupport.demo',
     initials: 'AN',
     role: EduRole.tutor,
   ),
-  'admin@edusupport.demo': EduUser(
+  'admin@edusupport.demo': const EduUser(
     id: 'u_admin_1',
     name: 'System Admin',
     email: 'admin@edusupport.demo',
@@ -100,7 +100,7 @@ const _demoUsers = <String, EduUser>{
 };
 
 // ⚠️ DEMO ONLY — client-side passwords, never expose in production
-const _demoPasswords = <String, String>{
+final _demoPasswords = <String, String>{
   'student@edusupport.demo': 'Student@123',
   'tutor@edusupport.demo': 'Tutor@123',
   'admin@edusupport.demo': 'Admin@123',
@@ -192,6 +192,39 @@ class MockAuthService {
 
     await _store.saveSession(user);
     return LoginResult.success(user);
+  }
+
+  Future<LoginResult> register(String name, String email, String password) async {
+    // Simulate network latency
+    await Future<void>.delayed(const Duration(milliseconds: 1200));
+
+    final normalised = email.toLowerCase().trim();
+
+    if (_demoUsers.containsKey(normalised)) {
+      return const LoginResult.failure('An account with that email already exists.');
+    }
+
+    final initials = name.length >= 2 ? name.substring(0, 2).toUpperCase() : name.toUpperCase();
+
+    final newUser = EduUser(
+      id: 'u_new_${DateTime.now().millisecondsSinceEpoch}',
+      name: name,
+      email: normalised,
+      initials: initials,
+      role: EduRole.student,
+    );
+
+    _demoUsers[normalised] = newUser;
+    _demoPasswords[normalised] = password;
+
+    await _store.saveSession(newUser);
+    return LoginResult.success(newUser);
+  }
+
+  Future<bool> recoverPassword(String email) async {
+    // Simulate network latency
+    await Future<void>.delayed(const Duration(milliseconds: 1500));
+    return true; // We always return true to prevent email enumerations in UI flow
   }
 
   Future<void> logout() => _store.clearSession();

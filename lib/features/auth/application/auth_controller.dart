@@ -59,7 +59,6 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
-  /// Attempts mock login. Returns true on success.
   Future<bool> login(String email, String password) async {
     state = state.copyWith(isSubmitting: true, clearError: true);
     final result = await _service.login(email, password);
@@ -78,6 +77,33 @@ class AuthController extends StateNotifier<AuthState> {
       );
       return false;
     }
+  }
+
+  Future<bool> register(String name, String email, String password) async {
+    state = state.copyWith(isSubmitting: true, clearError: true);
+    final result = await _service.register(name, email, password);
+    if (result.isSuccess) {
+      state = AuthState(
+        status: AuthStatus.authenticated,
+        user: result.user,
+        isSubmitting: false,
+      );
+      return true;
+    } else {
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: result.error,
+        isSubmitting: false,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> recoverPassword(String email) async {
+    state = state.copyWith(isSubmitting: true, clearError: true);
+    final success = await _service.recoverPassword(email);
+    state = state.copyWith(isSubmitting: false);
+    return success;
   }
 
   Future<void> logout() async {
