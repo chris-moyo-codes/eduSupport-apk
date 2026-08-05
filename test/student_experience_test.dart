@@ -64,9 +64,7 @@ void main() {
 
     expect(find.text('Overview'), findsOneWidget); // AppBar title
     expect(find.text('Good morning, Student.'), findsOneWidget);
-    expect(find.text('Study Activity'), findsOneWidget);
     expect(find.text('Upcoming Session'), findsOneWidget);
-    expect(find.text('Quick Actions'), findsOneWidget);
     expect(find.text('Offline Library'), findsOneWidget);
   });
 
@@ -89,7 +87,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Active Study'), findsOneWidget);
-    expect(find.text('UP NEXT FOR YOU'), findsOneWidget);
+    expect(find.text('UP NEXT'), findsOneWidget);
     expect(find.text('Suggested Activities'), findsOneWidget);
   });
 

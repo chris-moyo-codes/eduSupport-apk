@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
-import '../../../../core/widgets/edu_card.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../../settings/application/theme_controller.dart';
 
@@ -41,9 +40,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5),
+                color: theme.colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
@@ -327,22 +325,23 @@ class _SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EduCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
             children: [
               Container(
-                width: 30,
-                height: 30,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(6),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface),
+                child: Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Text(
                 title,
                 style: TextStyle(
@@ -353,10 +352,10 @@ class _SettingsSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          ...children,
-        ],
-      ),
+        ),
+        const SizedBox(height: 8),
+        ...children,
+      ],
     );
   }
 }

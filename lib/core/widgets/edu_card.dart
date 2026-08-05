@@ -21,10 +21,7 @@ class EduCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final shape = RoundedRectangleBorder(
       borderRadius: borderRadius ?? EduSupportTheme.radiusLg,
-      side: BorderSide(
-        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-        width: 1,
-      ),
+      side: BorderSide.none,
     );
 
     return Card(

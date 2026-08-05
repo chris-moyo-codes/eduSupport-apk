@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
-import '../../../../core/widgets/edu_card.dart';
 import '../../data/tutor_mock_data.dart';
 
 class StudentListRow extends StatelessWidget {
@@ -20,12 +19,16 @@ class StudentListRow extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: EduCard(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Row(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: colorScheme.outlineVariant)),
+          ),
+          child: Row(
         children: [
           EduAvatar(
             initials: student.initials,
@@ -95,7 +98,9 @@ class StudentListRow extends StatelessWidget {
           ),
         ],
       ),
-    ));
+        ),
+      ),
+    );
   }
 
   Color _getProgressColor(ColorScheme colorScheme, double score) {
