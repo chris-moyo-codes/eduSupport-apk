@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:edusupport_mobile/app/app.dart';
 import 'package:edusupport_mobile/features/auth/application/auth_controller.dart';
+import 'package:edusupport_mobile/features/auth/data/mock_auth_service.dart';
 import 'package:edusupport_mobile/features/onboarding/application/onboarding_controller.dart';
 import 'package:edusupport_mobile/storage/onboarding_store.dart';
 
@@ -54,6 +55,6 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(find.text('Learn with\nEduSupport'), findsOneWidget);
+    expect(find.text('Premium\nlearning support.'), findsOneWidget);
   });
 }

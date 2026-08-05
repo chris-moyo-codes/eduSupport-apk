@@ -71,9 +71,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.5),
+                    Colors.black.withValues(alpha: 0.5),
                     Colors.transparent,
-                    theme.colorScheme.surface.withOpacity(0.5),
+                    theme.colorScheme.surface.withValues(alpha: 0.5),
                     theme.colorScheme.surface,
                   ],
                   stops: const [0.0, 0.4, 0.8, 1.0],
@@ -163,9 +163,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               padding: const EdgeInsets.all(12),
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.error.withOpacity(0.1),
+                                color: theme.colorScheme.error.withValues(alpha: 0.1),
                                 borderRadius: EduSupportTheme.radiusMd,
-                                border: Border.all(color: theme.colorScheme.error.withOpacity(0.3)),
+                                border: Border.all(color: theme.colorScheme.error.withValues(alpha: 0.3)),
                               ),
                               child: Text(
                                 authState.errorMessage!,
@@ -217,7 +217,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: Text(
                               'Demo Environments',
                               style: theme.textTheme.labelSmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+                                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -264,7 +264,7 @@ class _Divider extends StatelessWidget {
       child: Text(
         '•',
         style: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
         ),
       ),
     );

@@ -43,7 +43,7 @@ class StudyScreen extends StatelessWidget {
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
-                      color: theme.colorScheme.onPrimary.withOpacity(0.6),
+                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.6),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -60,7 +60,7 @@ class StudyScreen extends StatelessWidget {
                     '${deck.subject} · ${deck.totalCards} cards to review',
                     style: TextStyle(
                       fontSize: 14,
-                      color: theme.colorScheme.onPrimary.withOpacity(0.7),
+                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 20),

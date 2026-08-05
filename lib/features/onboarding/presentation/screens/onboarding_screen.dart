@@ -98,8 +98,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.2),
-                    theme.colorScheme.surface.withOpacity(0.5),
+                    Colors.black.withValues(alpha: 0.2),
+                    theme.colorScheme.surface.withValues(alpha: 0.5),
                     theme.colorScheme.surface,
                   ],
                   stops: const [0.0, 0.6, 1.0],

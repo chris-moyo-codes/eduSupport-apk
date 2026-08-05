@@ -22,8 +22,6 @@ class DashboardScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final featuredCourse = studentCourses.first;
     final nextSession = studentSessions.first;
-    final maxHours =
-        studentWeeklyActivity.map((a) => a.hours).reduce((a, b) => a > b ? a : b);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -174,7 +172,7 @@ class DashboardScreen extends StatelessWidget {
                     minimumSize: const Size(0, 36),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text(
+                  child: Text(
                     'View all',
                     style: TextStyle(
                       fontSize: 13,
@@ -194,7 +192,7 @@ class DashboardScreen extends StatelessWidget {
                       Container(
                         width: 38,
                         height: 38,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: theme.colorScheme.primary,
                         ),

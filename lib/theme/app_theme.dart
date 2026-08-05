@@ -104,7 +104,7 @@ class EduSupportTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: _lightSurface,
-        hintStyle: TextStyle(color: _lightForeground.withOpacity(0.5)),
+        hintStyle: TextStyle(color: _lightForeground.withValues(alpha: 0.5)),
         border: OutlineInputBorder(
           borderRadius: radiusLg,
           borderSide: const BorderSide(color: _lightBorder),
@@ -209,7 +209,7 @@ class EduSupportTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: _darkSurface,
-        hintStyle: TextStyle(color: _darkForeground.withOpacity(0.5)),
+        hintStyle: TextStyle(color: _darkForeground.withValues(alpha: 0.5)),
         border: OutlineInputBorder(
           borderRadius: radiusLg,
           borderSide: const BorderSide(color: _darkBorder),

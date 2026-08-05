@@ -16,7 +16,15 @@ import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authControllerProvider);
-  final onboardingState = ref.watch(onboardingControllerProvider);
+  // Use .select() so the router only rebuilds when routing-relevant fields change.
+  // Watching the full OnboardingState would rebuild (and reset) the GoRouter every
+  // time currentPage changes during swiping — which is not a routing concern.
+  final isOnboardingLoading = ref.watch(
+    onboardingControllerProvider.select((s) => s.isLoading),
+  );
+  final isOnboardingCompleted = ref.watch(
+    onboardingControllerProvider.select((s) => s.isCompleted),
+  );
 
   String getHomeRouteForRole(EduRole role) {
     switch (role) {
@@ -36,16 +44,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final location = state.matchedLocation;
 
       // 1. Still bootstrapping onboarding? Show splash.
-      if (onboardingState.isLoading) {
+      if (isOnboardingLoading) {
         return AppRoutes.splash;
       }
 
       // 2. Onboarding not completed? Force them to onboarding.
-      if (!onboardingState.isCompleted) {
-        if (location == AppRoutes.onboarding || location == AppRoutes.splash) {
-          return null;
+      if (!isOnboardingCompleted) {
+        if (location == AppRoutes.onboarding) {
+          return null; // Already on onboarding, allow it.
         }
-        return AppRoutes.onboarding;
+        return AppRoutes.onboarding; // Redirect everything else — including /splash — to onboarding.
       }
 
       // 3. Still bootstrapping auth session? Show splash.

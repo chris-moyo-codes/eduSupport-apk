@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../application/notification_controller.dart';
-import '../../data/notification_data.dart';
 
 class NotificationsSheet extends ConsumerWidget {
   const NotificationsSheet({super.key});
