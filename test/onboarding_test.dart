@@ -61,7 +61,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Premium\nlearning support.'), findsOneWidget);
+    expect(find.text('Premium learning support.'), findsOneWidget);
   });
 
   testWidgets('next advances onboarding and skip persists completion', (
@@ -93,14 +93,14 @@ void main() {
     await tester.pump();
     await tester.pumpAndSettle();
 
-    expect(find.text('Focus on\nwhat matters.'), findsOneWidget);
+    expect(find.text('Focus on what matters.'), findsOneWidget);
 
     await tester.tap(find.text('Skip'));
     await tester.pump();
     await tester.pumpAndSettle();
 
     expect(fakeStore.completed, isTrue);
-    expect(find.text('Welcome to your workspace.'), findsOneWidget);
+    expect(find.text('Your workspace awaits.'), findsOneWidget);
   });
 
   testWidgets('returning user skips onboarding', (tester) async {
@@ -122,7 +122,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Premium\nlearning support.'), findsNothing);
-    expect(find.text('Welcome to your workspace.'), findsOneWidget);
+    expect(find.text('Premium learning support.'), findsNothing);
+    expect(find.text('Your workspace awaits.'), findsOneWidget);
   });
 }

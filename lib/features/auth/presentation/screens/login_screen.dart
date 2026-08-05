@@ -43,170 +43,214 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final authState = ref.watch(authControllerProvider);
+    final topPadding = MediaQuery.of(context).padding.top;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Top Logo / Brand
-                    GestureDetector(
-                      onLongPress: () {
-                        DevTools.resetOnboarding(ref);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Onboarding reset.')),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              borderRadius: EduSupportTheme.radiusLg,
-                            ),
-                            child: Icon(Icons.school_rounded, color: theme.colorScheme.onPrimary, size: 24),
-                          ),
-                          const SizedBox(width: 16),
-                          Text(
-                            'EduSupport',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              letterSpacing: -0.5,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(flex: 2),
+      backgroundColor: Colors.black, // Behind image
+      body: Stack(
+        children: [
+          // ── Background Image Hero ──────────────────────────────────────────
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: screenHeight * 0.55,
+            child: Image.asset(
+              'assets/images/login-hero.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
 
-                    // Typography Hero
-                    Text(
-                      'Welcome to your workspace.',
-                      style: theme.textTheme.headlineLarge?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        letterSpacing: -1.0,
-                        height: 1.1,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Enter your credentials to access your personalized learning environment.',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        height: 1.5,
-                      ),
-                    ),
-                    const Spacer(flex: 2),
-
-                    // Error Message
-                    if (authState.errorMessage != null)
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        margin: const EdgeInsets.only(bottom: 24),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.error.withValues(alpha: 0.1),
-                          borderRadius: EduSupportTheme.radiusLg,
-                          border: Border.all(color: theme.colorScheme.error.withValues(alpha: 0.2)),
-                        ),
-                        child: Text(
-                          authState.errorMessage!,
-                          style: TextStyle(
-                            color: theme.colorScheme.error,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+          // ── Scrollable Form Area ───────────────────────────────────────────
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: SizedBox(height: screenHeight * 0.35), // Space for image to show
+              ),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(32, 40, 32, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Typography Hero
+                      Text(
+                        'Your workspace awaits.',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.5,
+                          fontFamily: 'Georgia', // Serif-style text as requested
                         ),
                       ),
-
-                    // Form
-                    EduTextField(
-                      label: 'Email Address',
-                      hintText: 'name@edusupport.demo',
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      enabled: !authState.isSubmitting,
-                    ),
-                    const SizedBox(height: 20),
-                    EduTextField(
-                      label: 'Password',
-                      hintText: 'Enter your password',
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      enabled: !authState.isSubmitting,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                      const SizedBox(height: 12),
+                      Text(
+                        'Sign in to access your dashboard and resources.',
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
-                          size: 20,
+                          height: 1.5,
                         ),
-                        onPressed: () {
-                          setState(() => _obscurePassword = !_obscurePassword);
-                        },
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    EduButton(
-                      label: 'Sign In',
-                      fullWidth: true,
-                      size: EduButtonSize.large,
-                      loading: authState.isSubmitting,
-                      onPressed: _login,
-                    ),
-                    
-                    const SizedBox(height: 32),
-                    
-                    // Demo Links
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 24),
-                      decoration: BoxDecoration(
-                        border: Border(top: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.3))),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'DEVELOPMENT ACCESS',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                              letterSpacing: 1.0,
+                      const SizedBox(height: 32),
+
+                      // Error Message
+                      if (authState.errorMessage != null)
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          margin: const EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.error.withValues(alpha: 0.1),
+                            borderRadius: EduSupportTheme.radiusLg,
+                          ),
+                          child: Text(
+                            authState.errorMessage!,
+                            style: TextStyle(
+                              color: theme.colorScheme.error,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _DemoLink(
-                                label: 'Student',
-                                onTap: () => _fillDemo('student@edusupport.demo', 'Student@123'),
-                              ),
-                              _DemoLink(
-                                label: 'Tutor',
-                                onTap: () => _fillDemo('tutor@edusupport.demo', 'Tutor@123'),
-                              ),
-                              _DemoLink(
-                                label: 'Admin',
-                                onTap: () => _fillDemo('admin@edusupport.demo', 'Admin@123'),
-                              ),
-                            ],
+                        ),
+
+                      // Form
+                      EduTextField(
+                        label: 'Email address',
+                        hintText: 'name@edusupport.demo',
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        enabled: !authState.isSubmitting,
+                      ),
+                      const SizedBox(height: 20),
+                      EduTextField(
+                        label: 'Password',
+                        hintText: 'Enter your password',
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        enabled: !authState.isSubmitting,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: theme.colorScheme.onSurfaceVariant,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            setState(() => _obscurePassword = !_obscurePassword);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      EduButton(
+                        label: 'Sign In',
+                        fullWidth: true,
+                        size: EduButtonSize.large,
+                        loading: authState.isSubmitting,
+                        onPressed: _login,
+                      ),
+                      
+                      const Spacer(),
+                      const SizedBox(height: 32),
+                      
+                      // Demo Links
+                      Center(
+                        child: Text(
+                          'Demo Environments',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _DemoLink(
+                            label: 'Student',
+                            onTap: () => _fillDemo('student@edusupport.demo', 'Student@123'),
+                          ),
+                          _Divider(),
+                          _DemoLink(
+                            label: 'Tutor',
+                            onTap: () => _fillDemo('tutor@edusupport.demo', 'Tutor@123'),
+                          ),
+                          _Divider(),
+                          _DemoLink(
+                            label: 'Admin',
+                            onTap: () => _fillDemo('admin@edusupport.demo', 'Admin@123'),
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // ── App Brand (Floating Top Left) ──────────────────────────────────
+          Positioned(
+            top: topPadding + 16,
+            left: 24,
+            child: GestureDetector(
+              onLongPress: () {
+                DevTools.resetOnboarding(ref);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Onboarding reset.')),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: EduSupportTheme.radiusLg,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.school_rounded, color: theme.colorScheme.onSurface, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'EduSupport',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        letterSpacing: -0.5,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Divider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Text(
+        '•',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
         ),
       ),
     );
@@ -225,13 +269,13 @@ class _DemoLink extends StatelessWidget {
       onTap: onTap,
       borderRadius: EduSupportTheme.radiusSm,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),

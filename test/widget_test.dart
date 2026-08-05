@@ -55,6 +55,6 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(find.text('Premium\nlearning support.'), findsOneWidget);
+    expect(find.text('Premium learning support.'), findsOneWidget);
   });
 }
