@@ -48,8 +48,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void _onNext() {
-    final currentIndex = _pageController.page?.round() ?? 0;
-    if (currentIndex == _pages.length - 1) {
+    final currentIndex = ref.read(onboardingControllerProvider).currentPage;
+    if (currentIndex >= _pages.length - 1) {
       ref.read(onboardingControllerProvider.notifier).complete();
       context.go(AppRoutes.login);
     } else {
@@ -57,7 +57,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         duration: const Duration(milliseconds: 600),
         curve: EduSupportTheme.easeEduSpring,
       );
-      ref.read(onboardingControllerProvider.notifier).nextPage();
+      // Note: onPageChanged will call nextPage() on the notifier once the
+      // animation completes and the page index changes, keeping state in sync.
     }
   }
 
@@ -177,7 +178,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       physics: const BouncingScrollPhysics(),
                       itemCount: _pages.length,
                       onPageChanged: (index) {
-                        // The state controller can track this if needed
+                        // Keep Riverpod state in sync with both swipes and
+                        // programmatic navigation (nextPage() animation).
+                        final notifier = ref.read(onboardingControllerProvider.notifier);
+                        final currentStateIndex = ref.read(onboardingControllerProvider).currentPage;
+                        if (index > currentStateIndex) {
+                          notifier.nextPage();
+                        } else if (index < currentStateIndex) {
+                          notifier.previousPage();
+                        }
                       },
                       itemBuilder: (context, index) {
                         final page = _pages[index];
