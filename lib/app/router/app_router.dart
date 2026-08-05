@@ -11,10 +11,12 @@ import '../../features/auth/presentation/screens/registration_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
-import '../../features/student/presentation/screens/tutors_screen.dart';
 import '../../features/student/presentation/screens/tasks_screen.dart';
+import '../../features/student/presentation/screens/tutors_screen.dart';
 import '../../features/student/presentation/screens/task_detail_screen.dart';
 import '../../features/tutor/presentation/screens/tutor_shell_screen.dart';
+import '../../features/tutor/presentation/screens/tutor_tasks_screen.dart';
+import '../../features/tutor/presentation/screens/tutor_task_review_screen.dart';
 import '../../theme/app_theme.dart';
 import 'app_routes.dart';
 
@@ -163,6 +165,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: ':id',
             name: AppRoutes.taskDetailName,
             builder: (context, state) => TaskDetailScreen(taskId: state.pathParameters['id']!),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: AppRoutes.tutorTasks,
+        builder: (context, state) => const TutorTasksScreen(),
+        routes: [
+          GoRoute(
+            path: ':id',
+            builder: (context, state) => TutorTaskReviewScreen(taskId: state.pathParameters['id']!),
           ),
         ],
       ),

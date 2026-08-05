@@ -279,9 +279,27 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
             if (task.status == TaskStatus.graded && task.gradeFeedback != null) ...[
               const SizedBox(height: 12),
               _SectionCard(
-                label: 'Tutor Feedback',
+                label: 'Tutor Evaluation',
                 labelColor: Colors.green.shade700,
                 backgroundColor: Colors.green.shade50,
+                trailing: task.awardedGrade != null
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade100,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.green.shade200),
+                        ),
+                        child: Text(
+                          'Grade: ${task.awardedGrade}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                      )
+                    : null,
                 child: Text(
                   task.gradeFeedback!,
                   style: theme.textTheme.bodyMedium?.copyWith(height: 1.6, color: Colors.green.shade900),
@@ -380,12 +398,14 @@ class _SectionCard extends StatelessWidget {
     required this.child,
     this.labelColor,
     this.backgroundColor,
+    this.trailing,
   });
 
   final String label;
   final Widget child;
   final Color? labelColor;
   final Color? backgroundColor;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -400,14 +420,21 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.8,
-              color: labelColor ?? theme.colorScheme.onSurfaceVariant,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                  color: labelColor ?? theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              ?trailing,
+            ],
           ),
           const SizedBox(height: 10),
           child,

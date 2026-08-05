@@ -5,6 +5,12 @@ class AppRoutes {
   static const onboarding = '/onboarding';
   static const onboardingName = 'onboarding';
 
+  static const String tutorTasks = '/tutor-tasks';
+  static const String tutorTaskDetail = '/tutor-tasks/:id';
+
+  // Admin
+  static const String admin = '/admin';
+
   static const login = '/login';
   static const loginName = 'login';
 

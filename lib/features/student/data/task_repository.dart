@@ -26,6 +26,7 @@ abstract class TaskRepository {
     String? fileSize,
     String? fileType,
   });
+  Future<String?> gradeSubmission(String taskId, String awardedGrade, String gradeFeedback);
 }
 
 // ─── Mock Implementation ──────────────────────────────────────────────────────
@@ -94,9 +95,43 @@ class MockTaskRepository implements TaskRepository {
       submissionType: task.submissionType,
       submission: submission,
       gradeFeedback: task.gradeFeedback,
+      awardedGrade: task.awardedGrade,
     );
 
     return SubmitTaskResult.success(submission);
+  }
+
+  @override
+  Future<String?> gradeSubmission(String taskId, String awardedGrade, String gradeFeedback) async {
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    final idx = _tasks.indexWhere((t) => t.id == taskId);
+    if (idx == -1) return 'Task not found.';
+
+    final task = _tasks[idx];
+    if (task.status != TaskStatus.submitted) {
+      return 'Only submitted tasks can be graded.';
+    }
+
+    _tasks[idx] = StudentTask(
+      id: task.id,
+      title: task.title,
+      subject: task.subject,
+      grade: task.grade,
+      description: task.description,
+      instructions: task.instructions,
+      tutorName: task.tutorName,
+      tutorInitials: task.tutorInitials,
+      dueDate: task.dueDate,
+      dueDateLabel: task.dueDateLabel,
+      status: TaskStatus.graded,
+      submissionType: task.submissionType,
+      submission: task.submission,
+      awardedGrade: awardedGrade,
+      gradeFeedback: gradeFeedback,
+    );
+
+    return null; // success
   }
 }
 

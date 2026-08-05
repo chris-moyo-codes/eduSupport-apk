@@ -11,7 +11,9 @@ import 'tutor_resources_screen.dart';
 import 'tutor_sessions_screen.dart';
 import 'tutor_students_screen.dart';
 
-const _tabTitles = ['Home', 'Students', 'Sessions', 'Resources', 'Profile'];
+import 'tutor_tasks_screen.dart';
+
+const _tabTitles = ['Home', 'Tasks', 'Students', 'Sessions', 'Resources', 'Profile'];
 
 class TutorShellScreen extends ConsumerStatefulWidget {
   const TutorShellScreen({super.key});
@@ -34,8 +36,9 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
     final screens = <Widget>[
       TutorHomeScreen(
         onOpenSessions: _openSessions,
-        onOpenStudents: () => setState(() => _selectedIndex = 1),
+        onOpenStudents: () => setState(() => _selectedIndex = 2),
       ),
+      const TutorTasksScreen(),
       const TutorStudentsScreen(),
       const TutorSessionsScreen(),
       const TutorResourcesScreen(),
@@ -113,6 +116,11 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.assignment_outlined),
+            selectedIcon: Icon(Icons.assignment_rounded),
+            label: 'Tasks',
           ),
           NavigationDestination(
             icon: Icon(Icons.people_alt_outlined),

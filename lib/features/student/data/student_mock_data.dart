@@ -637,6 +637,7 @@ class StudentTask {
     required this.status,
     required this.submissionType,
     this.submission,
+    this.awardedGrade,
     this.gradeFeedback,
   });
 
@@ -653,6 +654,7 @@ class StudentTask {
   final TaskStatus status;
   final SubmissionType submissionType;
   final TaskSubmission? submission;
+  final String? awardedGrade;
   final String? gradeFeedback;
 }
 
@@ -712,7 +714,8 @@ const mockStudentTasks = <StudentTask>[
       textResponse: "Newton's First Law can be seen when a passenger leans forward during sudden braking. Second Law is demonstrated by the effort needed to push a heavy trolley. Third Law is evident when pushing off a wall while swimming.",
       submittedAt: '2026-07-29T16:45:00Z',
     ),
-    gradeFeedback: "Good real-world examples across all three laws. Work on expanding the Second Law discussion — mention the formula F=ma explicitly. 8/10.",
+    awardedGrade: "8/10",
+    gradeFeedback: "Good real-world examples across all three laws. Work on expanding the Second Law discussion — mention the formula F=ma explicitly.",
   ),
 ];
 
