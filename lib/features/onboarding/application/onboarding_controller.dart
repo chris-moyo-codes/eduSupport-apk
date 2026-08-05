@@ -54,6 +54,12 @@ class OnboardingController extends StateNotifier<OnboardingState> {
     await _store.setOnboardingCompleted(true);
     state = state.copyWith(isCompleted: true, currentPage: 0);
   }
+
+  /// DEV ONLY — resets completion flag without affecting production behavior.
+  Future<void> resetForDev() async {
+    await _store.setOnboardingCompleted(false);
+    state = state.copyWith(isCompleted: false, currentPage: 0);
+  }
 }
 
 final onboardingControllerProvider =

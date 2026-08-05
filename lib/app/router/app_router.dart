@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/app_shell/presentation/screens/role_picker_screen.dart';
+import '../../features/admin/presentation/screens/admin_placeholder_screen.dart';
 import '../../features/app_shell/presentation/screens/shell_screen.dart';
 import '../../features/auth/application/auth_controller.dart';
 import '../../features/auth/presentation/screens/auth_gate.dart';
@@ -10,10 +10,24 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/student/presentation/screens/tutors_screen.dart';
+import '../../features/tutor/presentation/screens/tutor_placeholder_screen.dart';
+import '../../theme/app_theme.dart';
+import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authControllerProvider);
   final onboardingState = ref.watch(onboardingControllerProvider);
+
+  String getHomeRouteForRole(EduRole role) {
+    switch (role) {
+      case EduRole.student:
+        return AppRoutes.studentHome;
+      case EduRole.tutor:
+        return AppRoutes.tutorHome;
+      case EduRole.admin:
+        return AppRoutes.adminHome;
+    }
+  }
 
   return GoRouter(
     initialLocation: AppRoutes.splash,
@@ -21,10 +35,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final location = state.matchedLocation;
 
+      // 1. Still bootstrapping onboarding? Show splash.
       if (onboardingState.isLoading) {
         return AppRoutes.splash;
       }
 
+      // 2. Onboarding not completed? Force them to onboarding.
       if (!onboardingState.isCompleted) {
         if (location == AppRoutes.onboarding || location == AppRoutes.splash) {
           return null;
@@ -32,28 +48,48 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return AppRoutes.onboarding;
       }
 
-      if (authState.status == AuthStatus.loading) {
+      // 3. Still bootstrapping auth session? Show splash.
+      if (authState.isLoading) {
         return AppRoutes.splash;
       }
 
-      if (authState.status == AuthStatus.authenticated) {
-        if (location == AppRoutes.login || location == AppRoutes.splash) {
-          return AppRoutes.home;
+      // 4. Authenticated user behavior
+      if (authState.isAuthenticated) {
+        // If they try to go to login, splash, or onboarding, redirect to their role's home.
+        if (location == AppRoutes.login ||
+            location == AppRoutes.splash ||
+            location == AppRoutes.onboarding) {
+          return getHomeRouteForRole(authState.role);
         }
-        if (location == AppRoutes.rolePicker) {
-          return null;
+
+        // RBAC: Route Protection
+        // Prevent users from accessing other roles' specific routes.
+        if (location.startsWith('/tutor') && authState.role != EduRole.tutor) {
+          return getHomeRouteForRole(authState.role);
         }
-        return null;
+        if (location.startsWith('/admin') && authState.role != EduRole.admin) {
+          return getHomeRouteForRole(authState.role);
+        }
+        // Assuming student routes are under /home or /tutors, but /tutors might be shared later.
+        // For now, if tutor/admin try to go to /home (student shell), redirect them.
+        if (location == AppRoutes.studentHome && authState.role != EduRole.student) {
+           return getHomeRouteForRole(authState.role);
+        }
+
+        return null; // Allow access
       }
 
+      // 5. Unauthenticated user behavior
       if (location == AppRoutes.splash) {
         return AppRoutes.login;
       }
 
-      if (location == AppRoutes.login || location == AppRoutes.rolePicker) {
+      // Allow access to login if unauthenticated
+      if (location == AppRoutes.login) {
         return null;
       }
 
+      // Otherwise, force to login
       return AppRoutes.login;
     },
     routes: [
@@ -65,27 +101,68 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         name: AppRoutes.onboardingName,
-        builder: (context, state) => const OnboardingScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const OnboardingScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final curvedAnimation = CurvedAnimation(
+              parent: animation,
+              curve: EduSupportTheme.easeEdu,
+            );
+            return FadeTransition(
+              opacity: curvedAnimation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 0.05),
+                  end: Offset.zero,
+                ).animate(curvedAnimation),
+                child: child,
+              ),
+            );
+          },
+        ),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: AppRoutes.loginName,
-        builder: (context, state) => LoginScreen(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const LoginScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            final curvedAnimation = CurvedAnimation(
+              parent: animation,
+              curve: EduSupportTheme.easeEdu,
+            );
+            return FadeTransition(
+              opacity: curvedAnimation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.0, 0.05),
+                  end: Offset.zero,
+                ).animate(curvedAnimation),
+                child: child,
+              ),
+            );
+          },
+        ),
       ),
       GoRoute(
-        path: AppRoutes.home,
-        name: AppRoutes.homeName,
+        path: AppRoutes.studentHome,
+        name: AppRoutes.studentHomeName,
         builder: (context, state) => const ShellScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.tutorHome,
+        name: AppRoutes.tutorHomeName,
+        builder: (context, state) => const TutorPlaceholderScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.adminHome,
+        name: AppRoutes.adminHomeName,
+        builder: (context, state) => const AdminPlaceholderScreen(),
       ),
       GoRoute(
         path: AppRoutes.tutors,
         name: AppRoutes.tutorsName,
         builder: (context, state) => const TutorsScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.rolePicker,
-        name: AppRoutes.rolePickerName,
-        builder: (context, state) => const RolePickerScreen(),
       ),
     ],
     errorBuilder: (context, state) => const UnknownRouteScreen(),
@@ -107,19 +184,4 @@ class UnknownRouteScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class AppRoutes {
-  static const splash = '/';
-  static const splashName = 'splash';
-  static const onboarding = '/onboarding';
-  static const onboardingName = 'onboarding';
-  static const login = '/login';
-  static const loginName = 'login';
-  static const home = '/home';
-  static const homeName = 'home';
-  static const tutors = '/tutors';
-  static const tutorsName = 'tutors';
-  static const rolePicker = '/role-picker';
-  static const rolePickerName = 'role-picker';
 }

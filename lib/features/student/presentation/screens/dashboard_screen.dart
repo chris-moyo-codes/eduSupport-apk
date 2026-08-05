@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
-import '../../../../core/widgets/edu_progress_indicator.dart';
 import '../../data/student_mock_data.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -43,7 +42,7 @@ class DashboardScreen extends StatelessWidget {
                         'Good morning, Student.',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1A202C),
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -55,27 +54,6 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(width: 12),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 7,
-                      height: 7,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFF38A169),
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Sync',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -117,21 +95,23 @@ class DashboardScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: featuredCourse.progress / 100,
+                    backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(4),
+                    minHeight: 6,
+                  ),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
-                      EduProgressIndicator(
-                        progress: featuredCourse.progress / 100,
-                        size: 52,
-                        strokeWidth: 5,
-                      ),
-                      const SizedBox(width: 14),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               '${featuredCourse.progress}% complete',
-                              style: theme.textTheme.headlineSmall?.copyWith(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -163,57 +143,14 @@ class DashboardScreen extends StatelessWidget {
               'Study Activity',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A202C),
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 2),
             Text(
-              'This week',
-              style: theme.textTheme.bodySmall?.copyWith(
+              'This week: ${studentWeeklyActivity.map((a) => a.hours).reduce((a, b) => a + b)} hours studied',
+              style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 12),
-            EduCard(
-              child: SizedBox(
-                height: 72,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: studentWeeklyActivity.map((activity) {
-                    final isToday = activity == studentWeeklyActivity.last;
-                    final barHeight = maxHours > 0
-                        ? (activity.hours / maxHours) * 48
-                        : 4.0;
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          width: 26,
-                          height: barHeight.clamp(4.0, 48.0),
-                          decoration: BoxDecoration(
-                            color: isToday
-                                ? const Color(0xFF212B36)
-                                : const Color(0xFF212B36).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          activity.day,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: isToday ? FontWeight.w700 : FontWeight.w400,
-                            color: isToday
-                                ? const Color(0xFF212B36)
-                                : theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
               ),
             ),
 
@@ -226,7 +163,7 @@ class DashboardScreen extends StatelessWidget {
                   'Upcoming Session',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1A202C),
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const Spacer(),
@@ -241,7 +178,7 @@ class DashboardScreen extends StatelessWidget {
                     'View all',
                     style: TextStyle(
                       fontSize: 13,
-                      color: Color(0xFFC05621),
+                      color: theme.colorScheme.secondary,
                     ),
                   ),
                 ),
@@ -259,13 +196,13 @@ class DashboardScreen extends StatelessWidget {
                         height: 38,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xFF212B36),
+                          color: theme.colorScheme.primary,
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           nextSession.tutorInitials,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
                           ),
@@ -302,8 +239,8 @@ class DashboardScreen extends StatelessWidget {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today_rounded, size: 13,
-                          color: Color(0xFF718096)),
+                      Icon(Icons.calendar_today_rounded, size: 13,
+                          color: theme.colorScheme.onSurfaceVariant),
                       const SizedBox(width: 4),
                       Text(
                         '${nextSession.date} · ${nextSession.time}',
@@ -312,8 +249,8 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(Icons.schedule_rounded, size: 13,
-                          color: Color(0xFF718096)),
+                      Icon(Icons.schedule_rounded, size: 13,
+                          color: theme.colorScheme.onSurfaceVariant),
                       const SizedBox(width: 4),
                       Text(
                         '${nextSession.durationMinutes} min',
@@ -356,7 +293,7 @@ class DashboardScreen extends StatelessWidget {
               'Quick Actions',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A202C),
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 10),
@@ -391,7 +328,7 @@ class DashboardScreen extends StatelessWidget {
               'Offline Library',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A202C),
+                color: theme.colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 10),
@@ -401,10 +338,14 @@ class DashboardScreen extends StatelessWidget {
                 child: EduCard(
                   child: Row(
                     children: [
-                      EduProgressIndicator(
-                        progress: course.progress / 100,
-                        size: 44,
-                        strokeWidth: 4,
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.menu_book_rounded, color: theme.colorScheme.primary),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -419,12 +360,26 @@ class DashboardScreen extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              '${course.subject} · ${course.progress}%',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: LinearProgressIndicator(
+                                    value: course.progress / 100,
+                                    backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                    color: theme.colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(2),
+                                    minHeight: 4,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${course.progress}%',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

@@ -20,9 +20,21 @@ class FakeOnboardingStore implements OnboardingStore {
   }
 }
 
+class FakeUserStore implements MockUserStore {
+  @override
+  Future<void> clearSession() async {}
+
+  @override
+  Future<EduUser?> loadSession() async => null;
+
+  @override
+  Future<void> saveSession(EduUser user) async {}
+}
+
 void main() {
   testWidgets('new user sees onboarding', (tester) async {
     final fakeStore = FakeOnboardingStore(completed: false);
+    final fakeAuthService = MockAuthService(FakeUserStore());
 
     await tester.pumpWidget(
       ProviderScope(
@@ -31,7 +43,7 @@ void main() {
             (ref) => OnboardingController(fakeStore)..bootstrap(),
           ),
           authControllerProvider.overrideWith(
-            (ref) => AuthController()..bootstrapSession(),
+            (ref) => AuthController(fakeAuthService)..bootstrapSession(),
           ),
         ],
         child: const EduSupportApp(),
@@ -41,13 +53,14 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(find.text('Learn with EduSupport'), findsOneWidget);
+    expect(find.text('Learn with\nEduSupport'), findsOneWidget);
   });
 
   testWidgets('continue advances onboarding and skip persists completion', (
     tester,
   ) async {
     final fakeStore = FakeOnboardingStore(completed: false);
+    final fakeAuthService = MockAuthService(FakeUserStore());
 
     await tester.pumpWidget(
       ProviderScope(
@@ -56,7 +69,7 @@ void main() {
             (ref) => OnboardingController(fakeStore)..bootstrap(),
           ),
           authControllerProvider.overrideWith(
-            (ref) => AuthController()..bootstrapSession(),
+            (ref) => AuthController(fakeAuthService)..bootstrapSession(),
           ),
         ],
         child: const EduSupportApp(),
@@ -74,11 +87,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(fakeStore.completed, isTrue);
-    expect(find.text('Welcome back to EduSupport'), findsOneWidget);
+    expect(find.text('Your workspace awaits.'), findsOneWidget);
   });
 
   testWidgets('returning user skips onboarding', (tester) async {
     final fakeStore = FakeOnboardingStore(completed: true);
+    final fakeAuthService = MockAuthService(FakeUserStore());
 
     await tester.pumpWidget(
       ProviderScope(
@@ -87,7 +101,7 @@ void main() {
             (ref) => OnboardingController(fakeStore)..bootstrap(),
           ),
           authControllerProvider.overrideWith(
-            (ref) => AuthController()..bootstrapSession(),
+            (ref) => AuthController(fakeAuthService)..bootstrapSession(),
           ),
         ],
         child: const EduSupportApp(),
@@ -97,7 +111,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(find.text('Learn with EduSupport'), findsNothing);
-    expect(find.text('Welcome back to EduSupport'), findsOneWidget);
+    expect(find.text('Learn with\nEduSupport'), findsNothing);
+    expect(find.text('Your workspace awaits.'), findsOneWidget);
   });
 }

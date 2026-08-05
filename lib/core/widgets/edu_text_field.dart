@@ -14,6 +14,7 @@ class EduTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.keyboardType,
+    this.maxLines = 1,
   });
 
   final String? label;
@@ -27,6 +28,7 @@ class EduTextField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {

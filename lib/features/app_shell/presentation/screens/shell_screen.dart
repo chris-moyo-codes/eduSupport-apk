@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
+import '../../../auth/application/auth_controller.dart';
+import '../../../notifications/application/notification_controller.dart';
+import '../../../notifications/presentation/widgets/notifications_sheet.dart';
 import '../../../student/presentation/screens/dashboard_screen.dart';
 import '../../../student/presentation/screens/downloads_screen.dart';
 import '../../../student/presentation/screens/library_screen.dart';
@@ -49,35 +52,67 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
       ProfileScreen(onOpenDownloads: _openDownloads),
     ];
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F0EC),
+      backgroundColor: colorScheme.surfaceContainerLowest,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFFFFF),
+        backgroundColor: colorScheme.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
           _tabTitles[_selectedIndex],
-          style: const TextStyle(
+          style: theme.textTheme.titleMedium?.copyWith(
             fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A202C),
           ),
         ),
         actions: [
           Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final unreadCount = ref.watch(unreadCountProvider);
+                return IconButton(
+                  icon: Badge(
+                    isLabelVisible: unreadCount > 0,
+                    label: Text(unreadCount > 9 ? '9+' : unreadCount.toString()),
+                    backgroundColor: colorScheme.secondary,
+                    child: const Icon(Icons.notifications_none_rounded),
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => const NotificationsSheet(),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.only(right: 14),
-            child: GestureDetector(
-              onTap: () => setState(() => _selectedIndex = 4),
-              child: const EduAvatar(initials: 'SD', size: 34),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final user = ref.watch(
+                  authControllerProvider.select((s) => s.user),
+                );
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedIndex = 4),
+                  child: EduAvatar(initials: user?.initials ?? '??', size: 34),
+                );
+              },
             ),
           ),
         ],
       ),
       body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xFFFFFFFF),
-        indicatorColor: const Color(0xFF212B36).withValues(alpha: 0.08),
+        backgroundColor: colorScheme.surface,
+        indicatorColor: colorScheme.primary.withValues(alpha: 0.08),
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
           setState(() => _selectedIndex = index);
@@ -114,8 +149,8 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton.extended(
               onPressed: _openSessions,
-              backgroundColor: const Color(0xFF212B36),
-              foregroundColor: Colors.white,
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
               icon: const Icon(Icons.calendar_month_rounded),
               label: const Text('Sessions'),
             )

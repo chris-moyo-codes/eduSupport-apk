@@ -20,11 +20,23 @@ class FakeOnboardingStore implements OnboardingStore {
   }
 }
 
+class FakeUserStore implements MockUserStore {
+  @override
+  Future<void> clearSession() async {}
+
+  @override
+  Future<EduUser?> loadSession() async => null;
+
+  @override
+  Future<void> saveSession(EduUser user) async {}
+}
+
 void main() {
   testWidgets('App shell renders the EduSupport mobile foundation', (
     WidgetTester tester,
   ) async {
     final store = FakeOnboardingStore(completed: false);
+    final fakeAuthService = MockAuthService(FakeUserStore());
 
     await tester.pumpWidget(
       ProviderScope(
@@ -33,7 +45,7 @@ void main() {
             (ref) => OnboardingController(store)..bootstrap(),
           ),
           authControllerProvider.overrideWith(
-            (ref) => AuthController()..bootstrapSession(),
+            (ref) => AuthController(fakeAuthService)..bootstrapSession(),
           ),
         ],
         child: const EduSupportApp(),
@@ -42,6 +54,6 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
 
-    expect(find.text('Learn with EduSupport'), findsOneWidget);
+    expect(find.text('Learn with\nEduSupport'), findsOneWidget);
   });
 }

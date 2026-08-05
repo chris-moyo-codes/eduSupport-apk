@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_card.dart';
-import '../../../../core/widgets/edu_progress_indicator.dart';
 import '../../../../core/widgets/edu_section_header.dart';
 import '../../data/student_mock_data.dart';
 import 'flashcard_viewer_screen.dart';
@@ -32,36 +31,36 @@ class StudyScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF212B36),
+                color: theme.colorScheme.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'UP NEXT FOR YOU',
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1.2,
-                      color: Color(0x60FFFFFF),
+                      color: theme.colorScheme.onPrimary.withOpacity(0.6),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     deck.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      color: theme.colorScheme.onPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${deck.subject} · ${deck.totalCards} cards to review',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xB3FFFFFF),
+                      color: theme.colorScheme.onPrimary.withOpacity(0.7),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -78,8 +77,8 @@ class StudyScreen extends StatelessWidget {
                       icon: const Icon(Icons.play_circle_filled_rounded),
                       label: const Text('Start Review'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF212B36),
+                        backgroundColor: theme.colorScheme.onPrimary,
+                        foregroundColor: theme.colorScheme.primary,
                         minimumSize: const Size(0, 48),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -96,13 +95,13 @@ class StudyScreen extends StatelessWidget {
             // ── Suggested Activities ─────────────────────────────────────────
             Row(
               children: [
-                const Icon(Icons.bolt_rounded, size: 18, color: Color(0xFFC05621)),
+                Icon(Icons.bolt_rounded, size: 18, color: theme.colorScheme.secondary),
                 const SizedBox(width: 6),
                 Text(
                   'Suggested Activities',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1A202C),
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
               ],
@@ -115,10 +114,14 @@ class StudyScreen extends StatelessWidget {
                 child: EduCard(
                   child: Row(
                     children: [
-                      EduProgressIndicator(
-                        progress: item.progress / 100,
-                        size: 52,
-                        strokeWidth: 5,
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(Icons.book_outlined, color: theme.colorScheme.primary),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -139,6 +142,14 @@ class StudyScreen extends StatelessWidget {
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
+                            ),
+                            const SizedBox(height: 6),
+                            LinearProgressIndicator(
+                              value: item.progress / 100,
+                              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                              color: theme.colorScheme.primary,
+                              borderRadius: BorderRadius.circular(2),
+                              minHeight: 4,
                             ),
                           ],
                         ),

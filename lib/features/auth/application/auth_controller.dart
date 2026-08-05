@@ -1,57 +1,100 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/mock_auth_service.dart';
+
+export '../data/mock_auth_service.dart' show EduUser, EduRole, LoginResult;
+
+// ─── State ────────────────────────────────────────────────────────────────────
+
 enum AuthStatus { loading, authenticated, unauthenticated }
 
-enum EduMockRole { student, tutor, admin }
-
-final mockRoleProvider = StateProvider<EduMockRole>(
-  (ref) => EduMockRole.student,
-);
-
-class AuthControllerState {
-  const AuthControllerState({
+class AuthState {
+  const AuthState({
     this.status = AuthStatus.loading,
-    this.isLoading = false,
+    this.user,
+    this.errorMessage,
+    this.isSubmitting = false,
   });
 
   final AuthStatus status;
-  final bool isLoading;
+  final EduUser? user;
+  final String? errorMessage;
+  final bool isSubmitting;
 
-  AuthControllerState copyWith({AuthStatus? status, bool? isLoading}) {
-    return AuthControllerState(
+  bool get isAuthenticated => status == AuthStatus.authenticated;
+  bool get isLoading => status == AuthStatus.loading;
+  EduRole get role => user?.role ?? EduRole.student;
+
+  AuthState copyWith({
+    AuthStatus? status,
+    EduUser? user,
+    String? errorMessage,
+    bool clearError = false,
+    bool? isSubmitting,
+  }) {
+    return AuthState(
       status: status ?? this.status,
-      isLoading: isLoading ?? this.isLoading,
+      user: user ?? this.user,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      isSubmitting: isSubmitting ?? this.isSubmitting,
     );
   }
 }
 
-class AuthController extends StateNotifier<AuthControllerState> {
-  AuthController() : super(const AuthControllerState());
+// ─── Controller ───────────────────────────────────────────────────────────────
 
+class AuthController extends StateNotifier<AuthState> {
+  AuthController(this._service) : super(const AuthState());
+
+  final MockAuthService _service;
+
+  /// Called once on app boot — restores a persisted session if available.
   Future<void> bootstrapSession() async {
-    state = state.copyWith(status: AuthStatus.loading, isLoading: true);
-
-    await Future<void>.delayed(const Duration(milliseconds: 250));
-
-    state = state.copyWith(
-      status: AuthStatus.unauthenticated,
-      isLoading: false,
-    );
+    state = const AuthState(status: AuthStatus.loading);
+    final user = await _service.restoreSession();
+    if (user != null) {
+      state = AuthState(status: AuthStatus.authenticated, user: user);
+    } else {
+      state = const AuthState(status: AuthStatus.unauthenticated);
+    }
   }
 
-  Future<void> login() async {
-    state = state.copyWith(status: AuthStatus.authenticated, isLoading: false);
+  /// Attempts mock login. Returns true on success.
+  Future<bool> login(String email, String password) async {
+    state = state.copyWith(isSubmitting: true, clearError: true);
+    final result = await _service.login(email, password);
+    if (result.isSuccess) {
+      state = AuthState(
+        status: AuthStatus.authenticated,
+        user: result.user,
+        isSubmitting: false,
+      );
+      return true;
+    } else {
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: result.error,
+        isSubmitting: false,
+      );
+      return false;
+    }
   }
 
   Future<void> logout() async {
-    state = state.copyWith(
-      status: AuthStatus.unauthenticated,
-      isLoading: false,
-    );
+    await _service.logout();
+    state = const AuthState(status: AuthStatus.unauthenticated);
   }
 }
 
+// ─── Provider ─────────────────────────────────────────────────────────────────
+
+final _mockAuthServiceProvider = Provider<MockAuthService>(
+  (ref) => MockAuthService(SecureMockUserStore()),
+);
+
 final authControllerProvider =
-    StateNotifierProvider<AuthController, AuthControllerState>(
-      (ref) => AuthController()..bootstrapSession(),
-    );
+    StateNotifierProvider<AuthController, AuthState>((ref) {
+      final controller = AuthController(ref.read(_mockAuthServiceProvider));
+      controller.bootstrapSession();
+      return controller;
+    });

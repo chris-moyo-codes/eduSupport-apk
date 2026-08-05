@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
+import '../../../auth/application/auth_controller.dart';
+import '../../../settings/application/theme_controller.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key, this.onOpenDownloads});
   final VoidCallback? onOpenDownloads;
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   // Toggle states matching web profile toggles
   bool _autoDownload = true;
   bool _lowBandwidth = false;
@@ -21,11 +24,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _newResources = false;
   bool _examReminders = true;
   bool _reduceMotion = false;
-  String _theme = 'System';
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final user = ref.watch(authControllerProvider.select((s) => s.user));
+    final themeMode = ref.watch(themeControllerProvider);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -37,39 +41,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFE4E2DC), width: 1.5),
+                border: Border.all(color: theme.colorScheme.outlineVariant, width: 1.5),
               ),
               child: Row(
                 children: [
-                  const EduAvatar(initials: 'SD', size: 64),
+                  EduAvatar(initials: user?.initials ?? '??', size: 64),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Student Demo',
-                          style: TextStyle(
-                            fontSize: 20,
+                        Text(
+                          user?.name ?? 'Unknown User',
+                          style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF1A202C),
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'student@edusupport.local',
+                          user?.email ?? '',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Wrap(
+                        Wrap(
                           spacing: 6,
                           children: [
-                            EduBadge(label: 'Student', tone: EduBadgeTone.info),
                             EduBadge(
+                              label: user?.role.name.toUpperCase() ?? 'STUDENT',
+                              tone: EduBadgeTone.info,
+                            ),
+                            const EduBadge(
                               label: 'Active Learner',
                               tone: EduBadgeTone.success,
                             ),
@@ -95,17 +100,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   action: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         'English',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1A202C),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      const Icon(Icons.chevron_right_rounded,
-                          size: 18, color: Color(0xFFA0AEC0)),
+                      Icon(Icons.chevron_right_rounded,
+                          size: 18, color: theme.colorScheme.onSurfaceVariant),
                     ],
                   ),
                 ),
@@ -115,17 +118,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   action: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         '30 minutes',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF1A202C),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      const Icon(Icons.chevron_right_rounded,
-                          size: 18, color: Color(0xFFA0AEC0)),
+                      Icon(Icons.chevron_right_rounded,
+                          size: 18, color: theme.colorScheme.onSurfaceVariant),
                     ],
                   ),
                 ),
@@ -214,10 +215,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   description: 'Choose your preferred colour scheme',
                   action: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: ['Light', 'Dark', 'System'].map((t) {
-                      final active = t == _theme;
+                    children: EduThemeMode.values.map((t) {
+                      final active = t == themeMode;
                       return GestureDetector(
-                        onTap: () => setState(() => _theme = t),
+                        onTap: () {
+                          ref.read(themeControllerProvider.notifier).setTheme(t);
+                        },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           margin: const EdgeInsets.only(left: 4),
@@ -225,23 +228,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: active
-                                ? const Color(0xFF212B36)
+                                ? theme.colorScheme.primary
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: active
-                                  ? const Color(0xFF212B36)
-                                  : const Color(0xFFE4E2DC),
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.outlineVariant,
                             ),
                           ),
                           child: Text(
-                            t,
+                            t.name[0].toUpperCase() + t.name.substring(1),
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                               color: active
-                                  ? Colors.white
-                                  : const Color(0xFF718096),
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),
@@ -282,7 +285,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     label: 'Sign out',
                     variant: EduButtonVariant.secondary,
                     size: EduButtonSize.small,
-                    onPressed: () {},
+                    onPressed: () {
+                      ref.read(authControllerProvider.notifier).logout();
+                    },
                   ),
                 ),
               ],
@@ -296,7 +301,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               variant: EduButtonVariant.ghost,
               leading: const Icon(Icons.logout_rounded, size: 16),
               fullWidth: true,
-              onPressed: () {},
+              onPressed: () {
+                ref.read(authControllerProvider.notifier).logout();
+              },
             ),
           ],
         ),
@@ -330,18 +337,18 @@ class _SettingsSection extends StatelessWidget {
                 width: 30,
                 height: 30,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F1),
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Icon(icon, size: 16, color: const Color(0xFF1A202C)),
+                child: Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(width: 10),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A202C),
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
@@ -377,19 +384,19 @@ class _SettingsRow extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF1A202C),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 if (description != null) ...[
                   const SizedBox(height: 2),
                   Text(
                     description!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF718096),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -420,7 +427,7 @@ class _EduSwitch extends StatelessWidget {
         width: 42,
         height: 24,
         decoration: BoxDecoration(
-          color: value ? const Color(0xFF212B36) : const Color(0xFFC8C5BC),
+          color: value ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
           borderRadius: BorderRadius.circular(12),
         ),
         child: AnimatedAlign(

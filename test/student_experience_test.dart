@@ -21,12 +21,24 @@ class FakeOnboardingStore implements OnboardingStore {
   }
 }
 
+class FakeUserStore implements MockUserStore {
+  @override
+  Future<void> clearSession() async {}
+
+  @override
+  Future<EduUser?> loadSession() async => null;
+
+  @override
+  Future<void> saveSession(EduUser user) async {}
+}
+
 void main() {
   Future<void> pumpApp(
     WidgetTester tester, {
     bool onboardingComplete = true,
   }) async {
     final fakeStore = FakeOnboardingStore(completed: onboardingComplete);
+    final fakeAuthService = MockAuthService(FakeUserStore());
 
     await tester.pumpWidget(
       ProviderScope(
@@ -35,7 +47,7 @@ void main() {
             (ref) => OnboardingController(fakeStore)..bootstrap(),
           ),
           authControllerProvider.overrideWith(
-            (ref) => AuthController()..login(),
+            (ref) => AuthController(fakeAuthService)..login('student@edusupport.demo', 'Student@123'),
           ),
         ],
         child: const EduSupportApp(),
