@@ -25,4 +25,9 @@ class AppRoutes {
 
   static const tutors = '/tutors';
   static const tutorsName = 'tutors';
+
+  static const tasks = '/tasks';
+  static const tasksName = 'tasks';
+
+  static const taskDetailName = 'task-detail';
 }

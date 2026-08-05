@@ -12,9 +12,10 @@ import '../../../student/presentation/screens/profile_screen.dart';
 import '../../../student/presentation/screens/sessions_screen.dart';
 import '../../../student/presentation/screens/study_screen.dart';
 import '../../../student/presentation/screens/tutors_screen.dart';
+import '../../../student/presentation/screens/tasks_screen.dart';
 
 /// Titles for each bottom-nav tab.
-const _tabTitles = ['Overview', 'Library', 'Study', 'Tutors', 'Profile'];
+const _tabTitles = ['Overview', 'Tasks', 'Library', 'Study', 'Tutors', 'Profile'];
 
 class ShellScreen extends ConsumerStatefulWidget {
   const ShellScreen({super.key});
@@ -43,9 +44,10 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
     final screens = <Widget>[
       DashboardScreen(
         onOpenSessions: _openSessions,
-        onOpenTutors: () => setState(() => _selectedIndex = 3),
-        onOpenLibrary: () => setState(() => _selectedIndex = 1),
+        onOpenTutors: () => setState(() => _selectedIndex = 4),
+        onOpenLibrary: () => setState(() => _selectedIndex = 2),
       ),
+      const TasksScreen(),
       const LibraryScreen(),
       const StudyScreen(),
       const TutorsScreen(),
@@ -101,7 +103,7 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
                   authControllerProvider.select((s) => s.user),
                 );
                 return GestureDetector(
-                  onTap: () => setState(() => _selectedIndex = 4),
+                  onTap: () => setState(() => _selectedIndex = 5),
                   child: EduAvatar(initials: user?.initials ?? '??', size: 34),
                 );
               },
@@ -123,6 +125,11 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.assignment_outlined),
+            selectedIcon: Icon(Icons.assignment_rounded),
+            label: 'Tasks',
           ),
           NavigationDestination(
             icon: Icon(Icons.book_outlined),

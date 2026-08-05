@@ -595,3 +595,124 @@ const studentSessions = <StudentSession>[
         'Worked through introduction and body paragraph construction. Homework: write one practice essay on a prescribed poem.',
   ),
 ];
+
+// ─── Phase 2: Task / Submission Models ───────────────────────────────────────
+
+enum TaskStatus { pending, submitted, graded, overdue }
+
+enum SubmissionType { text, file, both }
+
+class TaskSubmission {
+  const TaskSubmission({
+    required this.id,
+    required this.taskId,
+    required this.submittedAt,
+    this.textResponse,
+    this.fileName,
+    this.fileSize,
+    this.fileType,
+  });
+
+  final String id;
+  final String taskId;
+  final String submittedAt;
+  final String? textResponse;
+  final String? fileName;
+  final String? fileSize;
+  final String? fileType;
+}
+
+class StudentTask {
+  const StudentTask({
+    required this.id,
+    required this.title,
+    required this.subject,
+    required this.grade,
+    required this.description,
+    required this.instructions,
+    required this.tutorName,
+    required this.tutorInitials,
+    required this.dueDate,
+    required this.dueDateLabel,
+    required this.status,
+    required this.submissionType,
+    this.submission,
+    this.gradeFeedback,
+  });
+
+  final String id;
+  final String title;
+  final String subject;
+  final String grade;
+  final String description;
+  final String instructions;
+  final String tutorName;
+  final String tutorInitials;
+  final String dueDate;
+  final String dueDateLabel;
+  final TaskStatus status;
+  final SubmissionType submissionType;
+  final TaskSubmission? submission;
+  final String? gradeFeedback;
+}
+
+const mockStudentTasks = <StudentTask>[
+  StudentTask(
+    id: 'task-1',
+    title: 'Essay: The Cell and Its Functions',
+    subject: 'Biology',
+    grade: 'Grade 10',
+    description: 'Write a structured essay explaining the key organelles of an animal cell and their functions.',
+    instructions: 'Your essay should be 400–600 words. Address at minimum: the nucleus, mitochondria, endoplasmic reticulum, and Golgi apparatus. Use correct scientific terminology throughout.',
+    tutorName: 'Chisomo Banda',
+    tutorInitials: 'CB',
+    dueDate: '2026-08-08T17:00:00Z',
+    dueDateLabel: 'Fri, 8 Aug · 5:00 PM',
+    status: TaskStatus.pending,
+    submissionType: SubmissionType.both,
+  ),
+  StudentTask(
+    id: 'task-2',
+    title: 'Problem Set: Algebraic Equations',
+    subject: 'Mathematics',
+    grade: 'Grade 10',
+    description: 'Complete the assigned problem set on linear and quadratic equations.',
+    instructions: 'Solve all 10 problems showing full working. Scan or photograph your completed worksheet and submit. You may also type your solutions if you prefer.',
+    tutorName: 'Dr. Amara Nkosi',
+    tutorInitials: 'AN',
+    dueDate: '2026-08-06T12:00:00Z',
+    dueDateLabel: 'Wed, 6 Aug · 12:00 PM',
+    status: TaskStatus.submitted,
+    submissionType: SubmissionType.file,
+    submission: TaskSubmission(
+      id: 'sub-2',
+      taskId: 'task-2',
+      fileName: 'algebra_problemset_jonathan.pdf',
+      fileSize: '1.2 MB',
+      fileType: 'PDF',
+      submittedAt: '2026-08-05T09:14:00Z',
+    ),
+  ),
+  StudentTask(
+    id: 'task-3',
+    title: "Reflection: Newton's Laws in Daily Life",
+    subject: 'Physics',
+    grade: 'Grade 11',
+    description: "Write a short reflection on how Newton's three laws of motion apply to everyday experiences.",
+    instructions: "Write 200–300 words identifying one real-world example of each of Newton's three laws. Be specific — describe the exact forces involved.",
+    tutorName: 'Dr. Amara Nkosi',
+    tutorInitials: 'AN',
+    dueDate: '2026-07-30T17:00:00Z',
+    dueDateLabel: 'Wed, 30 Jul · 5:00 PM',
+    status: TaskStatus.graded,
+    submissionType: SubmissionType.text,
+    submission: TaskSubmission(
+      id: 'sub-3',
+      taskId: 'task-3',
+      textResponse: "Newton's First Law can be seen when a passenger leans forward during sudden braking. Second Law is demonstrated by the effort needed to push a heavy trolley. Third Law is evident when pushing off a wall while swimming.",
+      submittedAt: '2026-07-29T16:45:00Z',
+    ),
+    gradeFeedback: "Good real-world examples across all three laws. Work on expanding the Second Law discussion — mention the formula F=ma explicitly. 8/10.",
+  ),
+];
+

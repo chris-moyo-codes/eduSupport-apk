@@ -12,6 +12,8 @@ import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/student/presentation/screens/tutors_screen.dart';
+import '../../features/student/presentation/screens/tasks_screen.dart';
+import '../../features/student/presentation/screens/task_detail_screen.dart';
 import '../../features/tutor/presentation/screens/tutor_shell_screen.dart';
 import '../../theme/app_theme.dart';
 import 'app_routes.dart';
@@ -151,6 +153,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.tutors,
         name: AppRoutes.tutorsName,
         builder: (context, state) => const TutorsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.tasks,
+        name: AppRoutes.tasksName,
+        builder: (context, state) => const TasksScreen(),
+        routes: [
+          GoRoute(
+            path: ':id',
+            name: AppRoutes.taskDetailName,
+            builder: (context, state) => TaskDetailScreen(taskId: state.pathParameters['id']!),
+          ),
+        ],
       ),
     ],
     errorBuilder: (context, state) => const UnknownRouteScreen(),

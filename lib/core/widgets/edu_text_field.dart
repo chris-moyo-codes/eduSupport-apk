@@ -42,9 +42,11 @@ class EduTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           validator: validator,
-          obscureText: obscureText,
+          obscureText: obscureText && maxLines == 1,
           enabled: enabled,
-          keyboardType: keyboardType,
+          keyboardType: maxLines > 1 ? TextInputType.multiline : keyboardType,
+          maxLines: obscureText ? 1 : maxLines,
+          minLines: 1,
           decoration: InputDecoration(
             hintText: hintText,
             helperText: helperText,
