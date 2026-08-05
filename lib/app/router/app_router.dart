@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/admin/presentation/screens/admin_placeholder_screen.dart';
+import '../../features/admin/presentation/screens/admin_shell_screen.dart';
 import '../../features/app_shell/presentation/screens/shell_screen.dart';
 import '../../features/auth/application/auth_controller.dart';
 import '../../features/auth/presentation/screens/auth_gate.dart';
@@ -149,7 +149,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.adminHome,
         name: AppRoutes.adminHomeName,
-        pageBuilder: (context, state) => _buildPageWithTransition(const AdminPlaceholderScreen()),
+        pageBuilder: (context, state) => _buildPageWithTransition(const AdminShellScreen()),
       ),
       GoRoute(
         path: AppRoutes.tutors,
