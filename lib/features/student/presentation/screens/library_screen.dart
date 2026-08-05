@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
@@ -7,6 +8,7 @@ import '../../../../core/widgets/edu_empty_state.dart';
 import '../../../../core/widgets/edu_search_field.dart';
 import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
+import '../../data/resource_repository.dart';
 
 const _allCategories = [
   'All',
@@ -17,19 +19,32 @@ const _allCategories = [
   'Study Guides',
 ];
 
-class LibraryScreen extends StatefulWidget {
+class LibraryScreen extends ConsumerStatefulWidget {
   const LibraryScreen({super.key});
 
   @override
-  State<LibraryScreen> createState() => _LibraryScreenState();
+  ConsumerState<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen> {
+class _LibraryScreenState extends ConsumerState<LibraryScreen> with SingleTickerProviderStateMixin {
   String _query = '';
   String _activeCategory = 'All';
+  late TabController _tabController;
 
-  List<StudentResource> get _filtered {
-    return studentResources.where((r) {
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  List<StudentResource> _getFiltered(List<StudentResource> resources) {
+    return resources.where((r) {
       final matchesQuery = _query.isEmpty ||
           r.title.toLowerCase().contains(_query.toLowerCase()) ||
           r.subject.toLowerCase().contains(_query.toLowerCase());
@@ -41,6 +56,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
               _activeCategory.toLowerCase().replaceAll(' ', ' ');
       return matchesQuery && matchesCategory;
     }).toList();
+  }
+
+  List<StudentResource> _getSavedFiltered(List<StudentResource> filtered) {
+    return filtered.where((r) => r.isSaved).toList();
   }
 
   (Color, Color, String) _offlineConfig(BuildContext context, String status) {
@@ -68,13 +87,18 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filtered = _filtered;
+    final resourcesAsync = ref.watch(resourcesProvider);
+    final resources = resourcesAsync.valueOrNull ?? studentResources;
+
+    final filtered = _getFiltered(resources);
+    final savedFiltered = _getSavedFiltered(filtered);
     final featured = filtered.where((r) => r.isFeatured).toList();
     final others = filtered.where((r) => !r.isFeatured).toList();
 
-    final downloaded = studentResources
+    final downloaded = resources
         .where((r) => r.offlineStatus == 'available')
         .length;
+    final savedCount = resources.where((r) => r.isSaved).length;
     final theme = Theme.of(context);
 
     return SafeArea(
@@ -91,7 +115,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 Row(
                   children: [
                     _StatPill(
-                      value: '${studentResources.length}+',
+                      value: '${resources.length}+',
                       label: 'Resources',
                     ),
                     const SizedBox(width: 8),
@@ -153,60 +177,106 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                // Tabs: All / Saved
+                TabBar(
+                  controller: _tabController,
+                  isScrollable: false,
+                  dividerColor: theme.colorScheme.outlineVariant,
+                  labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                  tabs: [
+                    const Tab(text: 'All'),
+                    Tab(text: savedCount > 0 ? 'Saved ($savedCount)' : 'Saved'),
+                  ],
+                ),
               ],
             ),
           ),
 
           // ── Scrollable content ───────────────────────────────────────────────
           Expanded(
-            child: filtered.isEmpty
-                ? EduEmptyState(
-                    icon: Icons.search_off_rounded,
-                    title: 'No resources found',
-                    description:
-                        'Try adjusting your search or category filter.',
-                  )
-                : ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 80),
-                    children: [
-                      if (featured.isNotEmpty) ...[
-                        _SectionLabel(
-                          icon: Icons.star_rounded,
-                          label: 'Featured Resources',
-                        ),
-                        const SizedBox(height: 10),
-                        ...featured.map(
-                          (r) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: _ResourceCard(
-                              resource: r,
-                              offlineConfig: _offlineConfig(context, r.offlineStatus),
-                              typeIcon: _typeIcon(r.type),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // ── ALL tab ──
+                filtered.isEmpty
+                    ? EduEmptyState(
+                        icon: Icons.search_off_rounded,
+                        title: 'No resources found',
+                        description: 'Try adjusting your search or category filter.',
+                      )
+                    : ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                        children: [
+                          if (featured.isNotEmpty) ...[
+                            _SectionLabel(
+                              icon: Icons.star_rounded,
+                              label: 'Featured Resources',
+                            ),
+                            const SizedBox(height: 10),
+                            ...featured.map(
+                              (r) => Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: _ResourceCard(
+                                  resource: r,
+                                  offlineConfig: _offlineConfig(context, r.offlineStatus),
+                                  typeIcon: _typeIcon(r.type),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                          ],
+                          if (others.isNotEmpty) ...[
+                            _SectionLabel(
+                              icon: Icons.book_rounded,
+                              label: 'All Resources',
+                              count: others.length,
+                            ),
+                            const SizedBox(height: 10),
+                            ...others.map(
+                              (r) => Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: _ResourceCard(
+                                  resource: r,
+                                  offlineConfig: _offlineConfig(context, r.offlineStatus),
+                                  typeIcon: _typeIcon(r.type),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+
+                // ── SAVED tab ──
+                savedFiltered.isEmpty
+                    ? EduEmptyState(
+                        icon: Icons.bookmark_outline_rounded,
+                        title: 'No saved resources',
+                        description: 'Tap the bookmark icon on any resource to save it for quick access.',
+                      )
+                    : ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                        children: [
+                          _SectionLabel(
+                            icon: Icons.bookmark_rounded,
+                            label: 'Saved Resources',
+                            count: savedFiltered.length,
+                          ),
+                          const SizedBox(height: 10),
+                          ...savedFiltered.map(
+                            (r) => Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: _ResourceCard(
+                                resource: r,
+                                offlineConfig: _offlineConfig(context, r.offlineStatus),
+                                typeIcon: _typeIcon(r.type),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                      ],
-                      if (others.isNotEmpty) ...[
-                        _SectionLabel(
-                          icon: Icons.book_rounded,
-                          label: 'All Resources',
-                          count: others.length,
-                        ),
-                        const SizedBox(height: 10),
-                        ...others.map(
-                          (r) => Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: _ResourceCard(
-                              resource: r,
-                              offlineConfig: _offlineConfig(context, r.offlineStatus),
-                              typeIcon: _typeIcon(r.type),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
+                        ],
+                      ),
+              ],
+            ),
           ),
         ],
       ),
@@ -282,7 +352,7 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-class _ResourceCard extends StatelessWidget {
+class _ResourceCard extends ConsumerStatefulWidget {
   const _ResourceCard({
     required this.resource,
     required this.offlineConfig,
@@ -294,12 +364,36 @@ class _ResourceCard extends StatelessWidget {
   final IconData typeIcon;
 
   @override
+  ConsumerState<_ResourceCard> createState() => _ResourceCardState();
+}
+
+class _ResourceCardState extends ConsumerState<_ResourceCard> {
+  bool _isSaving = false;
+  bool _isCompleting = false;
+
+  Future<void> _toggleSave() async {
+    setState(() => _isSaving = true);
+    await ref.read(resourcesProvider.notifier).toggleSaved(widget.resource.id);
+    if (mounted) setState(() => _isSaving = false);
+  }
+
+  Future<void> _toggleComplete() async {
+    setState(() => _isCompleting = true);
+    await ref.read(resourcesProvider.notifier).toggleCompleted(widget.resource.id);
+    if (mounted) setState(() => _isCompleting = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final (bgColor, fgColor, statusLabel) = offlineConfig;
+    final resource = widget.resource;
+    final (bgColor, fgColor, statusLabel) = widget.offlineConfig;
+    final typeIcon = widget.typeIcon;
     final isDownloading = resource.offlineStatus == 'downloading';
     final isAvailable = resource.offlineStatus == 'available';
     final canDownload = resource.offlineStatus == 'download_available';
+    final isCompleted = resource.status == 'completed';
+    final isSaved = resource.isSaved;
 
     return EduCard(
       child: Column(
@@ -418,17 +512,75 @@ class _ResourceCard extends StatelessWidget {
             const SizedBox(height: 12),
             const Divider(height: 1),
             const SizedBox(height: 10),
-            EduButton(
-              label: isAvailable ? 'Open Offline' : 'Download',
-              variant: isAvailable
-                  ? EduButtonVariant.secondary
-                  : EduButtonVariant.outline,
-              size: EduButtonSize.small,
-              leading: Icon(
-                isAvailable ? Icons.open_in_new_rounded : Icons.download_rounded,
-                size: 15,
-              ),
-              onPressed: () {},
+            Row(
+              children: [
+                Expanded(
+                  child: EduButton(
+                    label: isAvailable ? 'Open Offline' : 'Download',
+                    variant: isAvailable
+                        ? EduButtonVariant.secondary
+                        : EduButtonVariant.outline,
+                    size: EduButtonSize.small,
+                    leading: Icon(
+                      isAvailable ? Icons.open_in_new_rounded : Icons.download_rounded,
+                      size: 15,
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Save button
+                _isSaving
+                    ? const SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))),
+                      )
+                    : Tooltip(
+                        message: isSaved ? 'Remove from saved' : 'Save resource',
+                        child: IconButton(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark_rounded : Icons.bookmark_outline_rounded,
+                            color: isSaved ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+                            size: 20,
+                          ),
+                          onPressed: _toggleSave,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                          style: IconButton.styleFrom(
+                            backgroundColor: isSaved ? theme.colorScheme.primary.withValues(alpha: 0.1) : null,
+                            shape: RoundedRectangleBorder(borderRadius: EduSupportTheme.radiusSm),
+                          ),
+                        ),
+                      ),
+                if (isAvailable) ...[
+                  const SizedBox(width: 4),
+                  // Mark Complete button
+                  _isCompleting
+                      ? const SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: Center(child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))),
+                        )
+                      : Tooltip(
+                          message: isCompleted ? 'Mark as in progress' : 'Mark as complete',
+                          child: IconButton(
+                            icon: Icon(
+                              isCompleted ? Icons.check_circle_rounded : Icons.check_circle_outline_rounded,
+                              color: isCompleted ? Colors.green.shade600 : theme.colorScheme.onSurfaceVariant,
+                              size: 20,
+                            ),
+                            onPressed: _toggleComplete,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                            style: IconButton.styleFrom(
+                              backgroundColor: isCompleted ? Colors.green.withValues(alpha: 0.1) : null,
+                              shape: RoundedRectangleBorder(borderRadius: EduSupportTheme.radiusSm),
+                            ),
+                          ),
+                        ),
+                ],
+              ],
             ),
           ],
         ],

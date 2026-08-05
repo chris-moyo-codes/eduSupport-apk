@@ -305,6 +305,58 @@ class _TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                   style: theme.textTheme.bodyMedium?.copyWith(height: 1.6, color: Colors.green.shade900),
                 ),
               ),
+              const SizedBox(height: 12),
+              // Continue Learning CTA
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: EduSupportTheme.radiusLg,
+                  border: Border.all(color: theme.colorScheme.outlineVariant),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        borderRadius: EduSupportTheme.radiusMd,
+                      ),
+                      child: Icon(Icons.book_outlined, color: theme.colorScheme.primary, size: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Continue Learning',
+                            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            'Review ${task.subject} materials and build on this feedback',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    EduButton(
+                      label: 'Study',
+                      size: EduButtonSize.small,
+                      variant: EduButtonVariant.secondary,
+                      leading: const Icon(Icons.arrow_forward_rounded, size: 14),
+                      onPressed: () {
+                        // Pop back to the shell and switch to Study tab (index 1)
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
 
             const SizedBox(height: 24),

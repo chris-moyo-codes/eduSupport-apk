@@ -13,9 +13,10 @@ import '../../../student/presentation/screens/sessions_screen.dart';
 import '../../../student/presentation/screens/study_screen.dart';
 import '../../../student/presentation/screens/tutors_screen.dart';
 import '../../../student/presentation/screens/tasks_screen.dart';
+import '../../../student/presentation/screens/progress_screen.dart';
 
 /// Titles for each bottom-nav tab.
-const _tabTitles = ['Overview', 'Tasks', 'Library', 'Study', 'Tutors', 'Profile'];
+const _tabTitles = ['Overview', 'Tasks', 'Library', 'Study', 'Tutors', 'Progress'];
 
 class ShellScreen extends ConsumerStatefulWidget {
   const ShellScreen({super.key});
@@ -51,7 +52,7 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
       const LibraryScreen(),
       const StudyScreen(),
       const TutorsScreen(),
-      ProfileScreen(onOpenDownloads: _openDownloads),
+      const ProgressScreen(),
     ];
 
     final theme = Theme.of(context);
@@ -103,7 +104,11 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
                   authControllerProvider.select((s) => s.user),
                 );
                 return GestureDetector(
-                  onTap: () => setState(() => _selectedIndex = 5),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ProfileScreen(onOpenDownloads: _openDownloads),
+                    ),
+                  ),
                   child: EduAvatar(initials: user?.initials ?? '??', size: 34),
                 );
               },
@@ -147,9 +152,9 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
             label: 'Tutors',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
+            icon: Icon(Icons.trending_up_rounded),
+            selectedIcon: Icon(Icons.trending_up_rounded),
+            label: 'Progress',
           ),
         ],
       ),

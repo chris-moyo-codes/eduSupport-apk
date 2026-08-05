@@ -25,7 +25,7 @@ class StudentCourse {
 }
 
 class StudentResource {
-  const StudentResource({
+  StudentResource({
     required this.id,
     required this.title,
     required this.description,
@@ -38,6 +38,8 @@ class StudentResource {
     this.fileSize,
     this.pages,
     this.isFeatured = false,
+    this.isSaved = false,
+    this.status = 'not_started',
   });
 
   final String id;
@@ -52,6 +54,8 @@ class StudentResource {
   final String? fileSize;
   final int? pages;
   final bool isFeatured;
+  bool isSaved;
+  String status;
 }
 
 class StudentFlashcard {
@@ -252,7 +256,7 @@ const studentWeeklyActivity = <WeeklyActivity>[
   WeeklyActivity(day: 'S', hours: 5.5),
 ];
 
-const studentResources = <StudentResource>[
+final studentResources = <StudentResource>[
   StudentResource(
     id: 'r1',
     title: 'Advanced Mathematics Grade 12 Textbook',
@@ -267,6 +271,8 @@ const studentResources = <StudentResource>[
     fileSize: '14.2 MB',
     pages: 342,
     isFeatured: true,
+    isSaved: true,
+    status: 'in_progress',
   ),
   StudentResource(
     id: 'r2',
