@@ -10,7 +10,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/student/presentation/screens/tutors_screen.dart';
-import '../../features/tutor/presentation/screens/tutor_placeholder_screen.dart';
+import '../../features/tutor/presentation/screens/tutor_shell_screen.dart';
 import '../../theme/app_theme.dart';
 import 'app_routes.dart';
 
@@ -160,7 +160,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.tutorHome,
         name: AppRoutes.tutorHomeName,
-        builder: (context, state) => const TutorPlaceholderScreen(),
+        builder: (context, state) => const TutorShellScreen(),
       ),
       GoRoute(
         path: AppRoutes.adminHome,
