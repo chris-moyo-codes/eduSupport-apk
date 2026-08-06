@@ -75,13 +75,9 @@ void main() {
     expect(find.byType(TutorSessionsScreen), findsOneWidget);
 
     // Tap Resources tab
-    await tester.tap(find.text('Resources').last);
-    await tester.pumpAndSettle();
-    expect(find.byType(TutorResourcesScreen), findsOneWidget);
-
+    // Resources was removed from bottom nav (accessed via home/profile).
     // Tap Profile tab
-    await tester.tap(find.text('Profile').last);
-    await tester.pumpAndSettle();
-    expect(find.byType(TutorProfileScreen), findsOneWidget);
+    // Profile was removed from bottom nav (accessed via AppBar avatar).
+    // Navigation is now: Home, Tasks, Students, Sessions.
   });
 }

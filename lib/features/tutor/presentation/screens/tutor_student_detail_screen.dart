@@ -23,8 +23,9 @@ class TutorStudentDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Student Profile'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -36,6 +37,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     student.name,
+                    textAlign: TextAlign.center,
                     style: textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -43,6 +45,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '${student.grade} • ${student.subject}',
+                    textAlign: TextAlign.center,
                     style: textTheme.bodyLarge?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -90,26 +93,50 @@ class TutorStudentDetailScreen extends StatelessWidget {
             const SizedBox(height: 32),
 
             // Actions
-            Row(
-              children: [
-                Expanded(
-                  child: EduButton(
-                    label: 'Message',
-                    leading: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
-                    variant: EduButtonVariant.secondary,
-                    onPressed: () {},
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: EduButton(
-                    label: 'Schedule',
-                    leading: const Icon(Icons.calendar_month_outlined, size: 16),
-                    variant: EduButtonVariant.primary,
-                    onPressed: () {},
-                  ),
-                ),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < 320) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      EduButton(
+                        label: 'Message',
+                        leading: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                        variant: EduButtonVariant.secondary,
+                        onPressed: () {},
+                      ),
+                      const SizedBox(height: 12),
+                      EduButton(
+                        label: 'Schedule',
+                        leading: const Icon(Icons.calendar_month_outlined, size: 16),
+                        variant: EduButtonVariant.primary,
+                        onPressed: () {},
+                      ),
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(
+                      child: EduButton(
+                        label: 'Message',
+                        leading: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
+                        variant: EduButtonVariant.secondary,
+                        onPressed: () {},
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: EduButton(
+                        label: 'Schedule',
+                        leading: const Icon(Icons.calendar_month_outlined, size: 16),
+                        variant: EduButtonVariant.primary,
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
+                );
+              }
             ),
             const SizedBox(height: 32),
             
@@ -127,6 +154,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

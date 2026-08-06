@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'admin_alerts_screen.dart';
 import 'admin_overview_screen.dart';
-import 'admin_profile_screen.dart';
+import 'admin_settings_screen.dart';
 import 'admin_users_screen.dart';
 
 import '../../data/admin_repository.dart';
@@ -22,7 +22,7 @@ class _AdminShellScreenState extends ConsumerState<AdminShellScreen> {
     AdminOverviewScreen(),
     AdminUsersScreen(),
     AdminAlertsScreen(),
-    AdminProfileScreen(),
+    AdminSettingsScreen(),
   ];
 
   @override
@@ -76,9 +76,9 @@ class _AdminShellScreenState extends ConsumerState<AdminShellScreen> {
             label: 'Alerts',
           ),
           const NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
+            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings_rounded),
+            label: 'Settings',
           ),
         ],
       ),

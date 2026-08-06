@@ -7,13 +7,12 @@ import '../../../notifications/application/notification_controller.dart';
 import '../../../notifications/presentation/widgets/notifications_sheet.dart';
 import 'tutor_home_screen.dart';
 import 'tutor_profile_screen.dart';
-import 'tutor_resources_screen.dart';
 import 'tutor_sessions_screen.dart';
 import 'tutor_students_screen.dart';
 
 import 'tutor_tasks_screen.dart';
 
-const _tabTitles = ['Home', 'Tasks', 'Students', 'Sessions', 'Resources', 'Profile'];
+const _tabTitles = ['Home', 'Tasks', 'Students', 'Sessions'];
 
 class TutorShellScreen extends ConsumerStatefulWidget {
   const TutorShellScreen({super.key});
@@ -41,8 +40,6 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
       const TutorTasksScreen(),
       const TutorStudentsScreen(),
       const TutorSessionsScreen(),
-      const TutorResourcesScreen(),
-      const TutorProfileScreen(),
     ];
 
     final theme = Theme.of(context);
@@ -94,7 +91,9 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
                   authControllerProvider.select((s) => s.user),
                 );
                 return GestureDetector(
-                  onTap: () => setState(() => _selectedIndex = 4),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const TutorProfileScreen()),
+                  ),
                   child: EduAvatar(initials: user?.initials ?? 'T', size: 34),
                 );
               },
@@ -131,16 +130,6 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
             icon: Icon(Icons.calendar_month_outlined),
             selectedIcon: Icon(Icons.calendar_month_rounded),
             label: 'Sessions',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.folder_copy_outlined),
-            selectedIcon: Icon(Icons.folder_copy_rounded),
-            label: 'Resources',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profile',
           ),
         ],
       ),

@@ -16,7 +16,7 @@ import '../../../student/presentation/screens/tasks_screen.dart';
 import '../../../student/presentation/screens/progress_screen.dart';
 
 /// Titles for each bottom-nav tab.
-const _tabTitles = ['Overview', 'Tasks', 'Library', 'Study', 'Tutors', 'Progress'];
+const _tabTitles = ['Overview', 'Tasks', 'Study', 'Progress'];
 
 class ShellScreen extends ConsumerStatefulWidget {
   const ShellScreen({super.key});
@@ -45,13 +45,25 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
     final screens = <Widget>[
       DashboardScreen(
         onOpenSessions: _openSessions,
-        onOpenTutors: () => setState(() => _selectedIndex = 4),
-        onOpenLibrary: () => setState(() => _selectedIndex = 2),
+        onOpenTutors: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => Scaffold(
+              appBar: AppBar(title: const Text('Tutors')),
+              body: const TutorsScreen(),
+            ),
+          ),
+        ),
+        onOpenLibrary: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => Scaffold(
+              appBar: AppBar(title: const Text('Library')),
+              body: const LibraryScreen(),
+            ),
+          ),
+        ),
       ),
       const TasksScreen(),
-      const LibraryScreen(),
       const StudyScreen(),
-      const TutorsScreen(),
       const ProgressScreen(),
     ];
 
@@ -137,19 +149,9 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
             label: 'Tasks',
           ),
           NavigationDestination(
-            icon: Icon(Icons.book_outlined),
-            selectedIcon: Icon(Icons.book_rounded),
-            label: 'Library',
-          ),
-          NavigationDestination(
             icon: Icon(Icons.auto_stories_outlined),
             selectedIcon: Icon(Icons.auto_stories_rounded),
             label: 'Study',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.people_alt_outlined),
-            selectedIcon: Icon(Icons.people_alt_rounded),
-            label: 'Tutors',
           ),
           NavigationDestination(
             icon: Icon(Icons.trending_up_rounded),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:edusupport_mobile/app/app.dart';
+import 'package:edusupport_mobile/core/widgets/edu_avatar.dart';
 import 'package:edusupport_mobile/features/auth/application/auth_controller.dart';
 import 'package:edusupport_mobile/features/auth/data/mock_auth_service.dart';
 import 'package:edusupport_mobile/features/onboarding/application/onboarding_controller.dart';
@@ -71,7 +72,12 @@ void main() {
   testWidgets('library renders search and filter chips', (tester) async {
     await pumpApp(tester);
 
-    await tester.tap(find.text('Library').last); // Bottom nav
+    // Library is now a quick-action button on the Dashboard (not bottom nav).
+    // The button may be below the fold in the test viewport — scroll it into view first.
+    final libraryBtn = find.widgetWithText(ElevatedButton, 'Library').first;
+    await tester.ensureVisible(libraryBtn);
+    await tester.pumpAndSettle();
+    await tester.tap(libraryBtn);
     await tester.pumpAndSettle();
 
     expect(find.byType(TextField), findsOneWidget);
@@ -94,7 +100,12 @@ void main() {
   testWidgets('tutors view renders with search and featured', (tester) async {
     await pumpApp(tester);
 
-    await tester.tap(find.text('Tutors').last); // Bottom nav
+    // Tutors is now a quick-action button on the Dashboard (not bottom nav).
+    // The button may be below the fold in the test viewport — scroll it into view first.
+    final tutorsBtn = find.widgetWithText(OutlinedButton, 'Tutors').first;
+    await tester.ensureVisible(tutorsBtn);
+    await tester.pumpAndSettle();
+    await tester.tap(tutorsBtn);
     await tester.pumpAndSettle();
 
     expect(find.byType(TextField), findsOneWidget);
@@ -104,7 +115,8 @@ void main() {
   testWidgets('profile renders identity and sections', (tester) async {
     await pumpApp(tester);
 
-    await tester.tap(find.text('Profile').last); // Bottom nav
+    // Profile is now accessed via the AppBar avatar (Navigator.push), not bottom nav.
+    await tester.tap(find.byType(EduAvatar).last);
     await tester.pumpAndSettle();
 
     expect(find.text('Jonathan Doe'), findsOneWidget);
