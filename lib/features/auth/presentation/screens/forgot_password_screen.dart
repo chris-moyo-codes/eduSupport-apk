@@ -187,7 +187,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         Icon(Icons.check_circle_rounded, color: theme.colorScheme.primary, size: 64),
         const SizedBox(height: 24),
         Text(
-          'Check your email',
+          'Recovery simulated',
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineMedium?.copyWith(
             color: theme.colorScheme.onSurface,
@@ -198,7 +198,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 12),
         Text(
-          'We\'ve sent password reset instructions to ${_emailController.text}.',
+          'If this were connected to a live backend, password reset instructions would have been sent to ${_emailController.text}.',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,

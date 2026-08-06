@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
@@ -102,16 +103,16 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> with SingleTicker
     final theme = Theme.of(context);
 
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Fixed header area ───────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Stats row
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Stats row
                 Row(
                   children: [
                     _StatPill(
@@ -192,13 +193,12 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> with SingleTicker
               ],
             ),
           ),
-
-          // ── Scrollable content ───────────────────────────────────────────────
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // ── ALL tab ──
+        ],
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // ── ALL tab ──
                 filtered.isEmpty
                     ? EduEmptyState(
                         icon: Icons.search_off_rounded,
@@ -275,10 +275,8 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> with SingleTicker
                           ),
                         ],
                       ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -525,7 +523,7 @@ class _ResourceCardState extends ConsumerState<_ResourceCard> {
                       isAvailable ? Icons.open_in_new_rounded : Icons.download_rounded,
                       size: 15,
                     ),
-                    onPressed: () {},
+                    onPressed: () => showNotImplementedSnackBar(context),
                   ),
                 ),
                 const SizedBox(width: 8),

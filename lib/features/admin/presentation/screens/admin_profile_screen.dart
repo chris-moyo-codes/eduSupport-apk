@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../theme/app_theme.dart';
+import '../../../../core/utils/ui_utils.dart';
 import '../../../auth/application/auth_controller.dart';
 
 class AdminProfileScreen extends ConsumerWidget {
@@ -15,6 +16,10 @@ class AdminProfileScreen extends ConsumerWidget {
     final user = ref.watch(authControllerProvider.select((s) => s.user));
 
     if (user == null) {
+      // User was logged out while screen was open — pop back immediately.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) Navigator.of(context).popUntil((r) => r.isFirst);
+      });
       return const SizedBox.shrink();
     }
 
@@ -91,8 +96,12 @@ class AdminProfileScreen extends ConsumerWidget {
                 variant: EduButtonVariant.destructive,
                 label: 'Sign Out',
                 leading: const Icon(Icons.logout_rounded, size: 20),
-                onPressed: () {
-                  ref.read(authControllerProvider.notifier).logout();
+                onPressed: () async {
+                  final confirm = await showLogoutConfirmationDialog(context);
+                  if (confirm == true && context.mounted) {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    ref.read(authControllerProvider.notifier).logout();
+                  }
                 },
               ),
             ],

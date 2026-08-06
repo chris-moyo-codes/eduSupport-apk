@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
+import '../../../../core/widgets/theme_toggle_button.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../../notifications/application/notification_controller.dart';
 import '../../../notifications/presentation/widgets/notifications_sheet.dart';
@@ -61,6 +62,7 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
             ),
           ),
         ),
+        onOpenStudy: () => setState(() => _selectedIndex = 2),
       ),
       const TasksScreen(),
       const StudyScreen(),
@@ -84,6 +86,7 @@ class _ShellScreenState extends ConsumerState<ShellScreen> {
           ),
         ),
         actions: [
+          const ThemeToggleButton(),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Consumer(

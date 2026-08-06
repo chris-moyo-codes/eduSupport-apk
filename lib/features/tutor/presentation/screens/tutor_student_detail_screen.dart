@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
@@ -103,14 +104,14 @@ class TutorStudentDetailScreen extends StatelessWidget {
                         label: 'Message',
                         leading: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
                         variant: EduButtonVariant.secondary,
-                        onPressed: () {},
+                        onPressed: () => showNotImplementedSnackBar(context),
                       ),
                       const SizedBox(height: 12),
                       EduButton(
                         label: 'Schedule',
                         leading: const Icon(Icons.calendar_month_outlined, size: 16),
                         variant: EduButtonVariant.primary,
-                        onPressed: () {},
+                        onPressed: () => showNotImplementedSnackBar(context),
                       ),
                     ],
                   );
@@ -122,7 +123,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                         label: 'Message',
                         leading: const Icon(Icons.chat_bubble_outline_rounded, size: 16),
                         variant: EduButtonVariant.secondary,
-                        onPressed: () {},
+                        onPressed: () => showNotImplementedSnackBar(context),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -131,7 +132,7 @@ class TutorStudentDetailScreen extends StatelessWidget {
                         label: 'Schedule',
                         leading: const Icon(Icons.calendar_month_outlined, size: 16),
                         variant: EduButtonVariant.primary,
-                        onPressed: () {},
+                        onPressed: () => showNotImplementedSnackBar(context),
                       ),
                     ),
                   ],

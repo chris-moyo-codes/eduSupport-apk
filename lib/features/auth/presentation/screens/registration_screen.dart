@@ -18,22 +18,41 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _subjectsController = TextEditingController();
   bool _obscurePassword = true;
+  EduRole _selectedRole = EduRole.student;
 
   Future<void> _register() async {
     final name = _nameController.text;
     final email = _emailController.text;
     final pass = _passwordController.text;
+    final confirm = _confirmPasswordController.text;
     
-    if (name.isEmpty || email.isEmpty || pass.isEmpty) return;
+    if (name.isEmpty || email.isEmpty || pass.isEmpty || confirm.isEmpty) return;
+    
+    if (pass != confirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
     if (pass.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Password must be at least 8 characters')),
       );
       return;
     }
+    
+    if (_selectedRole == EduRole.tutor && _subjectsController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please specify your teaching subjects')),
+      );
+      return;
+    }
 
-    final success = await ref.read(authControllerProvider.notifier).register(name, email, pass);
+    final success = await ref.read(authControllerProvider.notifier).register(name, email, pass, _selectedRole);
     if (success && mounted) {
       // The authController state change will automatically trigger GoRouter redirect
       // to the dashboard, but we can also show a success snackbar if we want.
@@ -48,6 +67,8 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _subjectsController.dispose();
     super.dispose();
   }
 
@@ -109,6 +130,21 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                           height: 1.5,
                         ),
                       ),
+                      const SizedBox(height: 24),
+
+                      // Role Selector
+                      SegmentedButton<EduRole>(
+                        segments: const [
+                          ButtonSegment(value: EduRole.student, label: Text('Student')),
+                          ButtonSegment(value: EduRole.tutor, label: Text('Teacher/Tutor')),
+                        ],
+                        selected: {_selectedRole},
+                        onSelectionChanged: (Set<EduRole> newSelection) {
+                          setState(() {
+                            _selectedRole = newSelection.first;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 32),
 
                       // Error Message
@@ -166,6 +202,24 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                           },
                         ),
                       ),
+                      const SizedBox(height: 20),
+                      EduTextField(
+                        label: 'Confirm Password',
+                        hintText: 'Repeat password',
+                        controller: _confirmPasswordController,
+                        obscureText: _obscurePassword,
+                        enabled: !authState.isSubmitting,
+                      ),
+                      if (_selectedRole == EduRole.tutor) ...[
+                        const SizedBox(height: 20),
+                        EduTextField(
+                          label: 'Subjects Taught',
+                          hintText: 'e.g. Math, Physics',
+                          controller: _subjectsController,
+                          keyboardType: TextInputType.text,
+                          enabled: !authState.isSubmitting,
+                        ),
+                      ],
                       const SizedBox(height: 32),
                       EduButton(
                         label: 'Sign Up',

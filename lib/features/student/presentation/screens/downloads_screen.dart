@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_empty_state.dart';
 import '../../../../theme/app_theme.dart';
@@ -167,7 +168,7 @@ class DownloadsScreen extends StatelessWidget {
                   const Spacer(),
                   if (downloaded.isNotEmpty)
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => showNotImplementedSnackBar(context),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(0, 36),
@@ -340,7 +341,7 @@ class _DownloadItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.delete_outline_rounded,
                   size: 18, color: theme.colorScheme.outline),
-              onPressed: () {},
+              onPressed: () => showNotImplementedSnackBar(context),
               tooltip: 'Remove',
             ),
         ],

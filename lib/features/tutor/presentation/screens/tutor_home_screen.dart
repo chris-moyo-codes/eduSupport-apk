@@ -6,6 +6,7 @@ import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_section_header.dart';
+import '../../../../core/utils/ui_utils.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../data/tutor_mock_data.dart';
 import '../widgets/student_list_row.dart';
@@ -205,7 +206,7 @@ class _PrioritySessionCard extends ConsumerWidget {
                   child: EduButton(
                     label: 'Join Session',
                     variant: EduButtonVariant.primary,
-                    onPressed: () {},
+                    onPressed: () => showNotImplementedSnackBar(context),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -213,7 +214,13 @@ class _PrioritySessionCard extends ConsumerWidget {
                   child: EduButton(
                     label: 'Review Notes',
                     variant: EduButtonVariant.secondary,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => TutorSessionDetailScreen(session: session),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

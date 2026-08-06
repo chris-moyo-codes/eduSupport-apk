@@ -20,17 +20,20 @@ import '../../features/tutor/presentation/screens/tutor_task_review_screen.dart'
 import '../../theme/app_theme.dart';
 import 'app_routes.dart';
 
+class _RouterNotifier extends ChangeNotifier {
+  _RouterNotifier(this._ref) {
+    _ref.listen(authControllerProvider, (_, __) => notifyListeners());
+    _ref.listen(onboardingControllerProvider, (_, __) => notifyListeners());
+  }
+  final Ref _ref;
+}
+
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authControllerProvider);
-  // Use .select() so the router only rebuilds when routing-relevant fields change.
-  // Watching the full OnboardingState would rebuild (and reset) the GoRouter every
-  // time currentPage changes during swiping — which is not a routing concern.
-  final isOnboardingLoading = ref.watch(
-    onboardingControllerProvider.select((s) => s.isLoading),
-  );
-  final isOnboardingCompleted = ref.watch(
-    onboardingControllerProvider.select((s) => s.isCompleted),
-  );
+  final routerNotifier = _RouterNotifier(ref);
+  
+  ref.onDispose(() {
+    routerNotifier.dispose();
+  });
 
   String getHomeRouteForRole(EduRole role) {
     switch (role) {
@@ -45,8 +48,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: AppRoutes.splash,
+    refreshListenable: routerNotifier,
     debugLogDiagnostics: true,
     redirect: (context, state) {
+      final authState = ref.read(authControllerProvider);
+      final isOnboardingLoading = ref.read(onboardingControllerProvider).isLoading;
+      final isOnboardingCompleted = ref.read(onboardingControllerProvider).isCompleted;
+      
       final location = state.matchedLocation;
 
       // 1. Still bootstrapping onboarding? Show splash.

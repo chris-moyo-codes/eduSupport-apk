@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
@@ -30,7 +31,7 @@ class SessionsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 14),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () => showNotImplementedSnackBar(context),
               child: Text(
                 'Find a Tutor',
                 style: TextStyle(
@@ -277,7 +278,7 @@ class _SessionCard extends StatelessWidget {
               variant: EduButtonVariant.primary,
               leading: const Icon(Icons.videocam_rounded, size: 16),
               fullWidth: true,
-              onPressed: () {},
+              onPressed: () => showNotImplementedSnackBar(context),
             ),
           if (isUpcoming)
             Row(
@@ -289,7 +290,7 @@ class _SessionCard extends StatelessWidget {
                     size: EduButtonSize.small,
                     leading: const Icon(Icons.videocam_rounded, size: 15),
                     fullWidth: true,
-                    onPressed: () {},
+                    onPressed: () => showNotImplementedSnackBar(context),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -297,7 +298,7 @@ class _SessionCard extends StatelessWidget {
                   label: 'Cancel',
                   variant: EduButtonVariant.ghost,
                   size: EduButtonSize.small,
-                  onPressed: () {},
+                  onPressed: () => showNotImplementedSnackBar(context),
                 ),
               ],
             ),
@@ -307,7 +308,7 @@ class _SessionCard extends StatelessWidget {
               variant: EduButtonVariant.outline,
               size: EduButtonSize.small,
               leading: const Icon(Icons.bookmark_outline_rounded, size: 15),
-              onPressed: () {},
+              onPressed: () => showNotImplementedSnackBar(context),
             ),
         ],
       ),

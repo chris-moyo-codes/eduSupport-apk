@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
@@ -335,7 +336,7 @@ class _TutorCard extends StatelessWidget {
                       : EduButtonVariant.primary,
                   size: EduButtonSize.small,
                   fullWidth: true,
-                  onPressed: isOffline ? null : () {},
+                  onPressed: isOffline ? null : () => showNotImplementedSnackBar(context),
                 ),
               ),
               const SizedBox(width: 10),
@@ -343,7 +344,7 @@ class _TutorCard extends StatelessWidget {
                 label: 'Profile',
                 variant: EduButtonVariant.ghost,
                 size: EduButtonSize.small,
-                onPressed: () {},
+                onPressed: () => showNotImplementedSnackBar(context),
               ),
             ],
           ),

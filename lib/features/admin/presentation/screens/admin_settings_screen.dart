@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_button.dart';
+import '../../../../core/utils/ui_utils.dart';
 import '../../../settings/application/theme_controller.dart';
 
 class AdminSettingsScreen extends ConsumerStatefulWidget {
@@ -81,7 +82,7 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
                       label: 'Manage',
                       variant: EduButtonVariant.ghost,
                       size: EduButtonSize.small,
-                      onPressed: () {},
+                      onPressed: () => showNotImplementedSnackBar(context),
                     ),
                   ),
                 ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:go_router/go_router.dart';
 import '../../../../core/utils/dev_tools.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_text_field.dart';
@@ -154,9 +154,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         loading: authState.isSubmitting,
                         onPressed: _login,
                       ),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            if (!authState.isSubmitting) {
+                              context.push('/forgot-password');
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: theme.colorScheme.onSurfaceVariant,
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            minimumSize: const Size(0, 0),
+                          ),
+                          child: const Text('Forgot Password?'),
+                        ),
+                      ),
                       
                       const Spacer(),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 24),
                       
                       // Demo Links
                       Center(
@@ -187,6 +203,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             onTap: () => _fillDemo('admin@edusupport.demo', 'Admin@123'),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 24),
+                      Divider(color: theme.colorScheme.outlineVariant),
+                      const SizedBox(height: 16),
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            if (!authState.isSubmitting) {
+                              context.push('/register');
+                            }
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'New here? ',
+                              style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+                              children: [
+                                TextSpan(
+                                  text: 'Create an account',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),

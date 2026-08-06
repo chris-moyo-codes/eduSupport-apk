@@ -194,7 +194,7 @@ class MockAuthService {
     return LoginResult.success(user);
   }
 
-  Future<LoginResult> register(String name, String email, String password) async {
+  Future<LoginResult> register(String name, String email, String password, EduRole role) async {
     // Simulate network latency
     await Future<void>.delayed(const Duration(milliseconds: 1200));
 
@@ -211,7 +211,7 @@ class MockAuthService {
       name: name,
       email: normalised,
       initials: initials,
-      role: EduRole.student,
+      role: role,
     );
 
     _demoUsers[normalised] = newUser;

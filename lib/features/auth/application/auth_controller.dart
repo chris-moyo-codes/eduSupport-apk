@@ -79,9 +79,9 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
-  Future<bool> register(String name, String email, String password) async {
+  Future<bool> register(String name, String email, String password, EduRole role) async {
     state = state.copyWith(isSubmitting: true, clearError: true);
-    final result = await _service.register(name, email, password);
+    final result = await _service.register(name, email, password, role);
     if (result.isSuccess) {
       state = AuthState(
         status: AuthStatus.authenticated,

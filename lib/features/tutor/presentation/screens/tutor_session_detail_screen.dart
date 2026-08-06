@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
@@ -131,7 +132,7 @@ class TutorSessionDetailScreen extends ConsumerWidget {
                     EduButton(
                       label: 'Add Pre-session Note',
                       variant: EduButtonVariant.outline,
-                      onPressed: () {},
+                      onPressed: () => showNotImplementedSnackBar(context),
                     ),
                   ],
                 ],
@@ -147,7 +148,7 @@ class TutorSessionDetailScreen extends ConsumerWidget {
                   label: 'Start Session',
                   leading: const Icon(Icons.video_camera_front_rounded, size: 16),
                   variant: EduButtonVariant.primary,
-                  onPressed: () {},
+                  onPressed: () => showNotImplementedSnackBar(context),
                 ),
               ),
             ],

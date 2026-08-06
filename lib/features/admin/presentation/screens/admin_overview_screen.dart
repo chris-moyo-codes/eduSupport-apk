@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
+import '../../../../core/widgets/theme_toggle_button.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../data/admin_mock_data.dart';
 import '../../data/admin_repository.dart';
+import 'admin_profile_screen.dart';
 
 class AdminOverviewScreen extends ConsumerWidget {
   const AdminOverviewScreen({super.key});
@@ -32,9 +34,16 @@ class AdminOverviewScreen extends ConsumerWidget {
           ),
         ),
         actions: [
+          const ThemeToggleButton(),
+          const SizedBox(width: 8),
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: EduAvatar(initials: user?.initials ?? 'A', size: 34),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const AdminProfileScreen()),
+              ),
+              child: EduAvatar(initials: user?.initials ?? 'A', size: 34),
+            ),
           ),
         ],
       ),

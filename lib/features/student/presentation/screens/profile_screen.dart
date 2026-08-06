@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
@@ -30,20 +31,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final user = ref.watch(authControllerProvider.select((s) => s.user));
     final themeMode = ref.watch(themeControllerProvider);
 
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 60),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Identity Card ─────────────────────────────────────────────────
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Settings'),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: theme.scaffoldBackgroundColor,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 60),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Identity ──────────────────────────────────────────────────────
+              Row(
                 children: [
                   EduAvatar(initials: user?.initials ?? '??', size: 64),
                   const SizedBox(width: 16),
@@ -54,19 +57,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         Text(
                           user?.name ?? 'Unknown User',
                           style: theme.textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           user?.email ?? '',
-                          style: theme.textTheme.bodySmall?.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         Wrap(
-                          spacing: 6,
+                          spacing: 8,
                           children: [
                             EduBadge(
                               label: user?.role.name.toUpperCase() ?? 'STUDENT',
@@ -83,227 +87,231 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 40),
 
-            const SizedBox(height: 24),
-
-            // ── Learning Preferences ──────────────────────────────────────────
-            _SettingsSection(
-              icon: Icons.book_outlined,
-              title: 'Learning Preferences',
-              children: [
-                _SettingsRow(
-                  label: 'Primary Language',
-                  description: 'Language used for interface and content',
-                  action: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'English',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+              // ── Learning Preferences ──────────────────────────────────────────
+              _SettingsSection(
+                icon: Icons.book_outlined,
+                title: 'Learning Preferences',
+                children: [
+                  _SettingsRow(
+                    label: 'Primary Language',
+                    description: 'Language used for interface and content',
+                    action: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'English',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(Icons.chevron_right_rounded,
-                          size: 18, color: theme.colorScheme.onSurfaceVariant),
-                    ],
+                        const SizedBox(width: 4),
+                        Icon(Icons.chevron_right_rounded,
+                            size: 18, color: theme.colorScheme.onSurfaceVariant),
+                      ],
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Study Goal',
-                  description: 'Your daily study target',
-                  action: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '30 minutes',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+                  _SettingsRow(
+                    label: 'Study Goal',
+                    description: 'Your daily study target',
+                    action: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '30 minutes',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(Icons.chevron_right_rounded,
-                          size: 18, color: theme.colorScheme.onSurfaceVariant),
-                    ],
+                        const SizedBox(width: 4),
+                        Icon(Icons.chevron_right_rounded,
+                            size: 18, color: theme.colorScheme.onSurfaceVariant),
+                      ],
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Exam Reminders',
-                  description: 'Notifications before scheduled exams',
-                  action: _EduSwitch(
-                    value: _examReminders,
-                    onChanged: (v) => setState(() => _examReminders = v),
+                  _SettingsRow(
+                    label: 'Exam Reminders',
+                    description: 'Notifications before scheduled exams',
+                    action: _EduSwitch(
+                      value: _examReminders,
+                      onChanged: (v) => setState(() => _examReminders = v),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // ── Offline & Storage ─────────────────────────────────────────────
-            _SettingsSection(
-              icon: Icons.storage_rounded,
-              title: 'Offline & Storage',
-              children: [
-                _SettingsRow(
-                  label: 'Auto-download over Wi-Fi',
-                  description: 'Automatically save new resources when connected',
-                  action: _EduSwitch(
-                    value: _autoDownload,
-                    onChanged: (v) => setState(() => _autoDownload = v),
+              // ── Offline & Storage ─────────────────────────────────────────────
+              _SettingsSection(
+                icon: Icons.storage_rounded,
+                title: 'Offline & Storage',
+                children: [
+                  _SettingsRow(
+                    label: 'Auto-download over Wi-Fi',
+                    description: 'Automatically save new resources when connected',
+                    action: _EduSwitch(
+                      value: _autoDownload,
+                      onChanged: (v) => setState(() => _autoDownload = v),
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Low bandwidth mode',
-                  description: 'Reduce data usage when on mobile data',
-                  action: _EduSwitch(
-                    value: _lowBandwidth,
-                    onChanged: (v) => setState(() => _lowBandwidth = v),
+                  _SettingsRow(
+                    label: 'Low bandwidth mode',
+                    description: 'Reduce data usage when on mobile data',
+                    action: _EduSwitch(
+                      value: _lowBandwidth,
+                      onChanged: (v) => setState(() => _lowBandwidth = v),
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Manage Downloads',
-                  description: 'View and remove offline content',
-                  action: EduButton(
-                    label: 'Open',
-                    variant: EduButtonVariant.ghost,
-                    size: EduButtonSize.small,
-                    onPressed: widget.onOpenDownloads,
+                  _SettingsRow(
+                    label: 'Manage Downloads',
+                    description: 'View and remove offline content',
+                    action: EduButton(
+                      label: 'Open',
+                      variant: EduButtonVariant.ghost,
+                      size: EduButtonSize.small,
+                      onPressed: widget.onOpenDownloads,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // ── Notifications ─────────────────────────────────────────────────
-            _SettingsSection(
-              icon: Icons.notifications_outlined,
-              title: 'Notifications',
-              children: [
-                _SettingsRow(
-                  label: 'Session reminders',
-                  description: 'Remind me 15 minutes before a session',
-                  action: _EduSwitch(
-                    value: _sessionReminders,
-                    onChanged: (v) => setState(() => _sessionReminders = v),
+              // ── Notifications ─────────────────────────────────────────────────
+              _SettingsSection(
+                icon: Icons.notifications_outlined,
+                title: 'Notifications',
+                children: [
+                  _SettingsRow(
+                    label: 'Session reminders',
+                    description: 'Remind me 15 minutes before a session',
+                    action: _EduSwitch(
+                      value: _sessionReminders,
+                      onChanged: (v) => setState(() => _sessionReminders = v),
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'New resources',
-                  description: 'When new content is added to my subjects',
-                  action: _EduSwitch(
-                    value: _newResources,
-                    onChanged: (v) => setState(() => _newResources = v),
+                  _SettingsRow(
+                    label: 'New resources',
+                    description: 'When new content is added to my subjects',
+                    action: _EduSwitch(
+                      value: _newResources,
+                      onChanged: (v) => setState(() => _newResources = v),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // ── Appearance ────────────────────────────────────────────────────
-            _SettingsSection(
-              icon: Icons.dark_mode_outlined,
-              title: 'Appearance',
-              children: [
-                _SettingsRow(
-                  label: 'Theme',
-                  description: 'Choose your preferred colour scheme',
-                  action: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: EduThemeMode.values.map((t) {
-                      final active = t == themeMode;
-                      return GestureDetector(
-                        onTap: () {
-                          ref.read(themeControllerProvider.notifier).setTheme(t);
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          margin: const EdgeInsets.only(left: 4),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: active
-                                ? theme.colorScheme.primary
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
+              // ── Appearance ────────────────────────────────────────────────────
+              _SettingsSection(
+                icon: Icons.dark_mode_outlined,
+                title: 'Appearance',
+                children: [
+                  _SettingsRow(
+                    label: 'Theme',
+                    description: 'Choose your preferred colour scheme',
+                    action: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: EduThemeMode.values.map((t) {
+                        final active = t == themeMode;
+                        return GestureDetector(
+                          onTap: () {
+                            ref.read(themeControllerProvider.notifier).setTheme(t);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            margin: const EdgeInsets.only(left: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
                               color: active
                                   ? theme.colorScheme.primary
-                                  : theme.colorScheme.outlineVariant,
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: active
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outlineVariant,
+                              ),
+                            ),
+                            child: Text(
+                              t.name[0].toUpperCase() + t.name.substring(1),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: active
+                                    ? theme.colorScheme.onPrimary
+                                    : theme.colorScheme.onSurfaceVariant,
+                              ),
                             ),
                           ),
-                          child: Text(
-                            t.name[0].toUpperCase() + t.name.substring(1),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: active
-                                  ? theme.colorScheme.onPrimary
-                                  : theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Reduce motion',
-                  description: 'Minimise animations throughout the app',
-                  action: _EduSwitch(
-                    value: _reduceMotion,
-                    onChanged: (v) => setState(() => _reduceMotion = v),
+                  _SettingsRow(
+                    label: 'Reduce motion',
+                    description: 'Minimise animations throughout the app',
+                    action: _EduSwitch(
+                      value: _reduceMotion,
+                      onChanged: (v) => setState(() => _reduceMotion = v),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // ── Account ───────────────────────────────────────────────────────
-            _SettingsSection(
-              icon: Icons.shield_outlined,
-              title: 'Account',
-              children: [
-                _SettingsRow(
-                  label: 'Change password',
-                  action: EduButton(
-                    label: 'Update',
-                    variant: EduButtonVariant.secondary,
-                    size: EduButtonSize.small,
-                    onPressed: () {},
+              // ── Account ───────────────────────────────────────────────────────
+              _SettingsSection(
+                icon: Icons.shield_outlined,
+                title: 'Account',
+                children: [
+                  _SettingsRow(
+                    label: 'Change password',
+                    action: EduButton(
+                      label: 'Update',
+                      variant: EduButtonVariant.secondary,
+                      size: EduButtonSize.small,
+                      onPressed: () => showNotImplementedSnackBar(context),
+                    ),
                   ),
-                ),
-                _SettingsRow(
-                  label: 'Sign out of all devices',
-                  action: EduButton(
-                    label: 'Sign out',
-                    variant: EduButtonVariant.secondary,
-                    size: EduButtonSize.small,
-                    onPressed: () {
-                      ref.read(authControllerProvider.notifier).logout();
-                    },
+                  _SettingsRow(
+                    label: 'Sign out of all devices',
+                    action: EduButton(
+                      label: 'Sign out',
+                      variant: EduButtonVariant.secondary,
+                      size: EduButtonSize.small,
+                      onPressed: () {
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        ref.read(authControllerProvider.notifier).logout();
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // ── Sign Out ──────────────────────────────────────────────────────
-            EduButton(
-              label: 'Sign Out',
-              variant: EduButtonVariant.ghost,
-              leading: const Icon(Icons.logout_rounded, size: 16),
-              fullWidth: true,
-              onPressed: () {
-                ref.read(authControllerProvider.notifier).logout();
-              },
-            ),
-          ],
+              // ── Sign Out ──────────────────────────────────────────────────────
+              EduButton(
+                fullWidth: true,
+                variant: EduButtonVariant.destructive,
+                label: 'Sign Out',
+                leading: const Icon(Icons.logout_rounded, size: 20),
+                onPressed: () async {
+                  final confirm = await showLogoutConfirmationDialog(context);
+                  if (confirm == true && context.mounted) {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    ref.read(authControllerProvider.notifier).logout();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -344,8 +352,7 @@ class _SettingsSection extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -353,7 +360,7 @@ class _SettingsSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         ...children,
       ],
     );
@@ -383,18 +390,16 @@ class _SettingsRow extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 if (description != null) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
                     description!,
-                    style: TextStyle(
-                      fontSize: 12,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
+import '../../../../core/widgets/theme_toggle_button.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../../notifications/application/notification_controller.dart';
 import '../../../notifications/presentation/widgets/notifications_sheet.dart';
@@ -59,6 +60,7 @@ class _TutorShellScreenState extends ConsumerState<TutorShellScreen> {
           ),
         ),
         actions: [
+          const ThemeToggleButton(),
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Consumer(
