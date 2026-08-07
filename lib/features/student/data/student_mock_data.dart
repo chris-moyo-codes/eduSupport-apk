@@ -39,6 +39,7 @@ class StudentResource {
     this.pages,
     this.isFeatured = false,
     this.isSaved = false,
+    this.isPremium = false,
     this.status = 'not_started',
   });
 
@@ -54,6 +55,7 @@ class StudentResource {
   final String? fileSize;
   final int? pages;
   final bool isFeatured;
+  final bool isPremium;
   bool isSaved;
   String status;
 }
@@ -272,6 +274,7 @@ final studentResources = <StudentResource>[
     pages: 342,
     isFeatured: true,
     isSaved: true,
+    isPremium: true,
     status: 'in_progress',
   ),
   StudentResource(
@@ -335,6 +338,7 @@ final studentResources = <StudentResource>[
     dateAdded: '2023-11-01',
     fileSize: '3.2 MB',
     pages: 45,
+    isPremium: true,
   ),
 ];
 

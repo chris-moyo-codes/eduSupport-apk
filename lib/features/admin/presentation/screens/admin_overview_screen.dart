@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/theme_toggle_button.dart';
+import '../../../../core/utils/ui_utils.dart';
 import '../../../../theme/app_theme.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../data/admin_mock_data.dart';
 import '../../data/admin_repository.dart';
+import 'admin_finance_screen.dart';
 import 'admin_profile_screen.dart';
+import 'admin_reports_screen.dart';
+import 'admin_tutor_verification_screen.dart';
 
 class AdminOverviewScreen extends ConsumerWidget {
   const AdminOverviewScreen({super.key});
@@ -18,6 +22,8 @@ class AdminOverviewScreen extends ConsumerWidget {
     final user = ref.watch(authControllerProvider.select((s) => s.user));
     final activityAsync = ref.watch(adminActivityProvider);
     final usersAsync = ref.watch(adminUsersProvider('tutor')); // Just to get pending count
+    final metrics = initialFinanceMetrics;
+    final activeReports = initialAdminReports.where((r) => r.status == 'open').length;
     
     int pendingCount = 0;
     if (usersAsync is AsyncData) {
@@ -121,11 +127,42 @@ class AdminOverviewScreen extends ConsumerWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _StatCard(
-                      label: 'Pending Reviews',
-                      value: pendingCount.toString(),
-                      trend: 'Requires Action',
-                      trendColor: pendingCount > 0 ? theme.colorScheme.error : theme.colorScheme.primary,
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdminTutorVerificationScreen())),
+                      child: _StatCard(
+                        label: 'Pending Reviews',
+                        value: pendingCount.toString(),
+                        trend: 'Requires Action',
+                        trendColor: pendingCount > 0 ? theme.colorScheme.error : theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdminFinanceScreen())),
+                      child: _StatCard(
+                        label: 'Platform Revenue',
+                        value: 'MWK ${formatCurrency(metrics.totalRevenue.toInt())}',
+                        trend: '+8%',
+                        trendColor: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdminReportsScreen())),
+                      child: _StatCard(
+                        label: 'Active Reports',
+                        value: activeReports.toString(),
+                        trend: activeReports > 0 ? 'Needs Review' : 'All Clear',
+                        trendColor: activeReports > 0 ? theme.colorScheme.error : theme.colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],

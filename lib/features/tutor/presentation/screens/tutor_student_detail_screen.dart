@@ -5,6 +5,7 @@ import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_section_header.dart';
+import '../../../../core/widgets/report_bottom_sheet.dart';
 import '../../../../theme/app_theme.dart';
 import '../../data/tutor_mock_data.dart';
 
@@ -23,6 +24,23 @@ class TutorStudentDetailScreen extends StatelessWidget {
       backgroundColor: colorScheme.surfaceContainerLowest,
       appBar: AppBar(
         title: const Text('Student Profile'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.report_gmailerrorred_rounded, color: colorScheme.error),
+            tooltip: 'Report Student',
+            onPressed: () {
+              showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => ReportBottomSheet(
+                  reportTargetName: student.name,
+                  reportTargetRole: 'student',
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

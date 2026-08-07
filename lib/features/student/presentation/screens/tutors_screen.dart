@@ -9,6 +9,7 @@ import '../../../../core/widgets/edu_empty_state.dart';
 import '../../../../core/widgets/edu_search_field.dart';
 import '../../../../core/widgets/edu_stat_chip.dart';
 import '../../data/student_mock_data.dart';
+import 'tutor_detail_screen.dart';
 
 const _filterLabels = ['All Subjects', 'Available Now'];
 
@@ -344,7 +345,13 @@ class _TutorCard extends StatelessWidget {
                 label: 'Profile',
                 variant: EduButtonVariant.ghost,
                 size: EduButtonSize.small,
-                onPressed: () => showNotImplementedSnackBar(context),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => StudentTutorDetailScreen(tutor: tutor),
+                    ),
+                  );
+                },
               ),
             ],
           ),

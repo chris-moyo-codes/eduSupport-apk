@@ -7,6 +7,10 @@ import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../../settings/application/theme_controller.dart';
+import '../../../settings/presentation/screens/account_deletion_screen.dart';
+import '../../application/student_profile_controller.dart';
+import '../../../notifications/presentation/screens/notification_preferences_screen.dart';
+import 'student_edit_profile_screen.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key, this.onOpenDownloads});
@@ -29,6 +33,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final user = ref.watch(authControllerProvider.select((s) => s.user));
+    final profile = ref.watch(studentProfileProvider);
     final themeMode = ref.watch(themeControllerProvider);
 
     return Scaffold(
@@ -55,7 +60,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user?.name ?? 'Unknown User',
+                          profile.name,
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: theme.colorScheme.onSurface,
@@ -63,7 +68,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          user?.email ?? '',
+                          profile.email,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -86,6 +91,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              EduButton(
+                label: 'Edit Profile',
+                variant: EduButtonVariant.outline,
+                size: EduButtonSize.small,
+                fullWidth: true,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const StudentEditProfileScreen(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 40),
 
@@ -185,19 +204,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 title: 'Notifications',
                 children: [
                   _SettingsRow(
-                    label: 'Session reminders',
-                    description: 'Remind me 15 minutes before a session',
-                    action: _EduSwitch(
-                      value: _sessionReminders,
-                      onChanged: (v) => setState(() => _sessionReminders = v),
-                    ),
-                  ),
-                  _SettingsRow(
-                    label: 'New resources',
-                    description: 'When new content is added to my subjects',
-                    action: _EduSwitch(
-                      value: _newResources,
-                      onChanged: (v) => setState(() => _newResources = v),
+                    label: 'Manage Preferences',
+                    description: 'Choose how and when we contact you',
+                    action: EduButton(
+                      label: 'Open',
+                      variant: EduButtonVariant.ghost,
+                      size: EduButtonSize.small,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const NotificationPreferencesScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -285,9 +304,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       label: 'Sign out',
                       variant: EduButtonVariant.secondary,
                       size: EduButtonSize.small,
+                      onPressed: () async {
+                        final confirm = await showLogoutConfirmationDialog(context);
+                        if (confirm == true && context.mounted) {
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                          ref.read(authControllerProvider.notifier).logout();
+                        }
+                      },
+                    ),
+                  ),
+                  _SettingsRow(
+                    label: 'Delete account',
+                    action: EduButton(
+                      label: 'Delete',
+                      variant: EduButtonVariant.destructive,
+                      size: EduButtonSize.small,
                       onPressed: () {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        ref.read(authControllerProvider.notifier).logout();
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const AccountDeletionScreen(),
+                          ),
+                        );
                       },
                     ),
                   ),

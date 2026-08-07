@@ -12,6 +12,17 @@ enum EduNotificationIcon {
   report,
   trending,
   person,
+  workspacePremium,
+  info,
+}
+
+enum EduNotificationCategory {
+  system,
+  premium,
+  sessionUpdate,
+  academic,
+  communication,
+  admin,
 }
 
 class EduNotification {
@@ -21,6 +32,7 @@ class EduNotification {
     required this.body,
     required this.timeAgo,
     required this.icon,
+    this.category = EduNotificationCategory.system,
     this.isRead = false,
   });
 
@@ -29,6 +41,7 @@ class EduNotification {
   final String body;
   final String timeAgo;
   final EduNotificationIcon icon;
+  final EduNotificationCategory category;
   bool isRead;
 }
 
@@ -36,11 +49,20 @@ class EduNotification {
 
 List<EduNotification> _studentNotifications() => [
   EduNotification(
+    id: 's_prem1',
+    title: 'Welcome to EduSupport Premium!',
+    body: 'Your subscription is active. You now have unlimited access to all resources and priority support.',
+    timeAgo: '10 min ago',
+    icon: EduNotificationIcon.workspacePremium,
+    category: EduNotificationCategory.premium,
+  ),
+  EduNotification(
     id: 's1',
     title: 'Session confirmed for tomorrow',
     body: 'Your session with Dr. Amara Nkosi is at 10:00 AM. Check your calendar.',
     timeAgo: '30 min ago',
     icon: EduNotificationIcon.calendar,
+    category: EduNotificationCategory.sessionUpdate,
   ),
   EduNotification(
     id: 's2',
@@ -48,6 +70,16 @@ List<EduNotification> _studentNotifications() => [
     body: 'Dr. Nkosi left comments on your Biology essay submission.',
     timeAgo: '2 hrs ago',
     icon: EduNotificationIcon.message,
+    category: EduNotificationCategory.academic,
+  ),
+  EduNotification(
+    id: 's_sys1',
+    title: 'App updated to version 2.4',
+    body: 'Check out the new Premium features and performance improvements.',
+    timeAgo: 'Yesterday',
+    icon: EduNotificationIcon.info,
+    category: EduNotificationCategory.system,
+    isRead: true,
   ),
   EduNotification(
     id: 's3',
@@ -55,6 +87,7 @@ List<EduNotification> _studentNotifications() => [
     body: 'A new practice quiz is available for Chapter 4 of your Biology course.',
     timeAgo: 'Yesterday',
     icon: EduNotificationIcon.quiz,
+    category: EduNotificationCategory.academic,
     isRead: true,
   ),
   EduNotification(
@@ -63,14 +96,7 @@ List<EduNotification> _studentNotifications() => [
     body: 'Mathematics Grade 10 textbook is now saved for offline use.',
     timeAgo: '2 days ago',
     icon: EduNotificationIcon.download,
-    isRead: true,
-  ),
-  EduNotification(
-    id: 's5',
-    title: 'Study reminder',
-    body: "You haven't reviewed Calculus this week. A short session keeps you on track.",
-    timeAgo: '3 days ago',
-    icon: EduNotificationIcon.clock,
+    category: EduNotificationCategory.system,
     isRead: true,
   ),
 ];

@@ -21,6 +21,7 @@ class NotificationController extends StateNotifier<List<EduNotification>> {
             body: n.body,
             timeAgo: n.timeAgo,
             icon: n.icon,
+            category: n.category,
             isRead: true,
           )
         else
@@ -37,6 +38,7 @@ class NotificationController extends StateNotifier<List<EduNotification>> {
           body: n.body,
           timeAgo: n.timeAgo,
           icon: n.icon,
+          category: n.category,
           isRead: true,
         ),
     ];

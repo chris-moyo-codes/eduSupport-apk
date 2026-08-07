@@ -10,6 +10,8 @@ import '../../../../core/widgets/edu_search_field.dart';
 import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 import '../../data/resource_repository.dart';
+import '../../data/premium_repository.dart';
+import 'premium_screen.dart';
 
 const _allCategories = [
   'All',
@@ -392,6 +394,8 @@ class _ResourceCardState extends ConsumerState<_ResourceCard> {
     final canDownload = resource.offlineStatus == 'download_available';
     final isCompleted = resource.status == 'completed';
     final isSaved = resource.isSaved;
+    final isPremiumUser = ref.watch(isPremiumProvider);
+    final isLocked = resource.isPremium && !isPremiumUser;
 
     return EduCard(
       child: Column(
@@ -435,6 +439,30 @@ class _ResourceCardState extends ConsumerState<_ResourceCard> {
                   ],
                 ),
               ),
+              if (resource.isPremium) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: EduSupportTheme.radiusSm,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.workspace_premium_rounded, size: 12, color: theme.colorScheme.primary),
+                      const SizedBox(width: 4),
+                      Text(
+                        'PREMIUM',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(width: 8),
               // Status badge
               Container(
@@ -506,7 +534,26 @@ class _ResourceCardState extends ConsumerState<_ResourceCard> {
                 ),
             ],
           ),
-          if (canDownload || isAvailable) ...[
+          if (isLocked) ...[
+            const SizedBox(height: 12),
+            const Divider(height: 1),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: EduButton(
+                label: 'Unlock Premium Resource',
+                leading: const Icon(Icons.lock_rounded, size: 16),
+                variant: EduButtonVariant.primary,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const PremiumScreen(),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ] else if (canDownload || isAvailable) ...[
             const SizedBox(height: 12),
             const Divider(height: 1),
             const SizedBox(height: 10),

@@ -1,5 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// Formats an integer as a comma-separated currency string (e.g., 15000 → '15,000').
+String formatCurrency(int amount) {
+  final str = amount.toString();
+  final buf = StringBuffer();
+  int count = 0;
+  for (int i = str.length - 1; i >= 0; i--) {
+    if (count > 0 && count % 3 == 0) buf.write(',');
+    buf.write(str[i]);
+    count++;
+  }
+  return buf.toString().split('').reversed.join();
+}
+
 /// Shows a standardized snackbar for interactions that require backend integration.
 /// This prevents empty taps during physical device validation.
 void showNotImplementedSnackBar(BuildContext context) {

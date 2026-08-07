@@ -7,7 +7,11 @@ import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/utils/ui_utils.dart';
 import '../../../auth/application/auth_controller.dart';
 import '../../../notifications/presentation/widgets/notifications_sheet.dart';
+import '../../../notifications/presentation/screens/notification_preferences_screen.dart';
 import '../../../settings/application/theme_controller.dart';
+import '../../../settings/presentation/screens/account_deletion_screen.dart';
+import 'tutor_earnings_screen.dart';
+import 'tutor_edit_profile_screen.dart';
 
 class TutorProfileScreen extends ConsumerWidget {
   const TutorProfileScreen({super.key});
@@ -50,6 +54,19 @@ class TutorProfileScreen extends ConsumerWidget {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
+              const SizedBox(height: 16),
+              EduButton(
+                label: 'Edit Professional Profile',
+                variant: EduButtonVariant.outline,
+                size: EduButtonSize.small,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const TutorEditProfileScreen(),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 32),
               
               // App Settings
@@ -90,6 +107,22 @@ class TutorProfileScreen extends ConsumerWidget {
                         );
                       },
                     ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: Icon(
+                        Icons.settings_suggest_outlined,
+                        color: colorScheme.primary,
+                      ),
+                      title: const Text('Notification Preferences'),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const NotificationPreferencesScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -119,11 +152,43 @@ class TutorProfileScreen extends ConsumerWidget {
                       trailing: const Icon(Icons.chevron_right_rounded),
                       onTap: () {},
                     ),
+                    const Divider(height: 1),
+                    ListTile(
+                      leading: Icon(
+                        Icons.account_balance_wallet_outlined,
+                        color: colorScheme.primary,
+                      ),
+                      title: const Text('Earnings & Withdrawals'),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const TutorEarningsScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 48),
 
+              SizedBox(
+                width: double.infinity,
+                child: EduButton(
+                  label: 'Delete Account',
+                  variant: EduButtonVariant.outline,
+                  leading: Icon(Icons.person_off_rounded, size: 20, color: theme.colorScheme.error),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const AccountDeletionScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: EduButton(

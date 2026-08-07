@@ -6,6 +6,7 @@ import '../../../../core/widgets/edu_badge.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_empty_state.dart';
+import '../../../../core/widgets/rate_tutor_sheet.dart';
 import '../../../../theme/app_theme.dart';
 import '../../data/student_mock_data.dart';
 
@@ -303,12 +304,41 @@ class _SessionCard extends StatelessWidget {
               ],
             ),
           if (isCompleted)
-            EduButton(
-              label: 'Book Again',
-              variant: EduButtonVariant.outline,
-              size: EduButtonSize.small,
-              leading: const Icon(Icons.bookmark_outline_rounded, size: 15),
-              onPressed: () => showNotImplementedSnackBar(context),
+            Row(
+              children: [
+                Expanded(
+                  child: EduButton(
+                    label: 'Rate Tutor',
+                    variant: EduButtonVariant.secondary,
+                    size: EduButtonSize.small,
+                    leading: const Icon(Icons.star_outline_rounded, size: 15),
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => RateTutorSheet(
+                          tutorId: session.tutorId,
+                          tutorName: session.tutorName,
+                          sessionSubject: session.subject,
+                          studentName: 'Jonathan Doe',
+                          studentInitials: 'JD',
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: EduButton(
+                    label: 'Book Again',
+                    variant: EduButtonVariant.outline,
+                    size: EduButtonSize.small,
+                    leading: const Icon(Icons.bookmark_outline_rounded, size: 15),
+                    onPressed: () => showNotImplementedSnackBar(context),
+                  ),
+                ),
+              ],
             ),
         ],
       ),

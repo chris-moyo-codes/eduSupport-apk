@@ -155,6 +155,10 @@ class _NotificationTile extends StatelessWidget {
         return Icons.trending_up_rounded;
       case EduNotificationIcon.person:
         return Icons.person_add_rounded;
+      case EduNotificationIcon.workspacePremium:
+        return Icons.workspace_premium_rounded;
+      case EduNotificationIcon.info:
+        return Icons.info_outline_rounded;
     }
   }
 

@@ -91,6 +91,56 @@ class PlatformActivity {
   final String type; // 'upload', 'registration', 'system'
 }
 
+class TutorApplication {
+  const TutorApplication({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.subjects,
+    required this.status,
+    required this.submittedDate,
+  });
+
+  final String id;
+  final String name;
+  final String email;
+  final List<String> subjects;
+  final String status; // 'pending', 'approved', 'rejected'
+  final String submittedDate;
+}
+
+class AdminReport {
+  const AdminReport({
+    required this.id,
+    required this.targetName,
+    required this.targetRole,
+    required this.category,
+    required this.status,
+    required this.date,
+  });
+
+  final String id;
+  final String targetName;
+  final String targetRole; // 'student' or 'tutor'
+  final String category;
+  final String status; // 'open', 'resolved'
+  final String date;
+}
+
+class FinanceMetrics {
+  const FinanceMetrics({
+    required this.totalRevenue,
+    required this.tutorPayouts,
+    required this.platformFees,
+    required this.pendingWithdrawals,
+  });
+
+  final double totalRevenue;
+  final double tutorPayouts;
+  final double platformFees;
+  final double pendingWithdrawals;
+}
+
 final List<AdminAlert> initialAdminAlerts = [
   const AdminAlert(
     id: "al1",
@@ -132,3 +182,22 @@ final List<PlatformActivity> adminRecentActivity = [
   const PlatformActivity(id: "pa3", user: "System", action: "Automated database backup completed", time: "4 hours ago", type: "system"),
   const PlatformActivity(id: "pa4", user: "Dr. Amara Nkosi", action: "Updated availability schedule", time: "5 hours ago", type: "system"),
 ];
+
+final List<TutorApplication> initialTutorApplications = [
+  const TutorApplication(id: 'app1', name: 'Dr. Sarah Chen', email: 'sarah.c@example.com', subjects: ['Physics', 'Math'], status: 'pending', submittedDate: '2 hours ago'),
+  const TutorApplication(id: 'app2', name: 'James Phiri', email: 'james.p@example.com', subjects: ['Biology'], status: 'pending', submittedDate: 'Yesterday'),
+  const TutorApplication(id: 'app3', name: 'Martha Banda', email: 'martha.b@example.com', subjects: ['English'], status: 'approved', submittedDate: '3 days ago'),
+];
+
+final List<AdminReport> initialAdminReports = [
+  const AdminReport(id: 'rep1', targetName: 'David Osei', targetRole: 'student', category: 'Harassment', status: 'open', date: '5 hours ago'),
+  const AdminReport(id: 'rep2', targetName: 'Prof. Arthur Pendelton', targetRole: 'tutor', category: 'No-show', status: 'open', date: '1 day ago'),
+  const AdminReport(id: 'rep3', targetName: 'Emma Mwangi', targetRole: 'student', category: 'Spam', status: 'resolved', date: '3 days ago'),
+];
+
+const FinanceMetrics initialFinanceMetrics = FinanceMetrics(
+  totalRevenue: 2500000.0,
+  tutorPayouts: 2125000.0,
+  platformFees: 375000.0,
+  pendingWithdrawals: 45000.0,
+);
