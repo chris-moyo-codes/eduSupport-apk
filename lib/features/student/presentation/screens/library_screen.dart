@@ -195,8 +195,9 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> with SingleTicker
               ],
             ),
           ),
-        ],
-      ),
+        ),     // closes SliverToBoxAdapter
+        ];     // end of return list
+      },       // closes headerSliverBuilder
       body: TabBarView(
         controller: _tabController,
         children: [

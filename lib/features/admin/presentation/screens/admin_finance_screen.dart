@@ -87,11 +87,15 @@ class AdminFinanceScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text(
-                      'MWK ${formatCurrency(metrics.pendingWithdrawals.toInt())}',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.tertiary,
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        'MWK ${formatCurrency(metrics.pendingWithdrawals.toInt())}',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.tertiary,
+                        ),
+                        textAlign: TextAlign.end,
                       ),
                     ),
                   ],
@@ -127,9 +131,19 @@ class _FinanceRow extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: isHeader ? textStyle : theme.textTheme.bodyMedium),
-        Text(value, style: textStyle),
+        Expanded(
+          child: Text(label, style: isHeader ? textStyle : theme.textTheme.bodyMedium),
+        ),
+        const SizedBox(width: 12),
+        Flexible(
+          child: Text(
+            value,
+            style: textStyle,
+            textAlign: TextAlign.end,
+          ),
+        ),
       ],
     );
   }

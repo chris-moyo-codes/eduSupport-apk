@@ -1,24 +1,59 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/utils/ui_utils.dart';
 import '../../../../core/widgets/edu_avatar.dart';
 import '../../../../core/widgets/edu_button.dart';
 import '../../../../core/widgets/edu_card.dart';
 import '../../../../core/widgets/edu_section_header.dart';
+import '../../../../core/widgets/edu_text_field.dart';
 import '../../../../core/widgets/report_bottom_sheet.dart';
 import '../../../../theme/app_theme.dart';
 import '../../data/tutor_mock_data.dart';
 
-class TutorStudentDetailScreen extends StatelessWidget {
+// Local provider to mock saving notes per student ID
+final tutorNotesProvider = StateProvider.family<String, String>((ref, id) {
+  return '';
+});
+
+class TutorStudentDetailScreen extends ConsumerStatefulWidget {
   const TutorStudentDetailScreen({super.key, required this.student});
 
   final TutorStudent student;
+
+  @override
+  ConsumerState<TutorStudentDetailScreen> createState() => _TutorStudentDetailScreenState();
+}
+
+class _TutorStudentDetailScreenState extends ConsumerState<TutorStudentDetailScreen> {
+  bool _isEditingNotes = false;
+  late TextEditingController _notesController;
+
+  @override
+  void initState() {
+    super.initState();
+    _notesController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final student = widget.student;
+    
+    // Sync notes state
+    final savedNotes = ref.watch(tutorNotesProvider(student.id));
+    if (!_isEditingNotes && _notesController.text.isEmpty && savedNotes.isNotEmpty) {
+      _notesController.text = savedNotes;
+    }
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -159,18 +194,55 @@ class TutorStudentDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             
-            // Notes Placeholder
-            const EduSectionHeader(title: 'Tutor Notes'),
+            // Notes Section
+            EduSectionHeader(
+              title: 'Tutor Notes',
+              action: TextButton(
+                onPressed: () {
+                  if (_isEditingNotes) {
+                    // Save
+                    ref.read(tutorNotesProvider(student.id).notifier).state = _notesController.text;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Notes saved successfully')),
+                    );
+                  } else {
+                    if (_notesController.text.isEmpty && savedNotes.isNotEmpty) {
+                      _notesController.text = savedNotes;
+                    }
+                  }
+                  setState(() => _isEditingNotes = !_isEditingNotes);
+                },
+                child: Text(
+                  _isEditingNotes ? 'Save' : 'Edit',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
             EduCard(
               padding: const EdgeInsets.all(20),
-              child: Text(
-                'Add private notes about ${student.name.split(' ').first}\'s learning style, goals, or areas needing improvement.',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
+              child: _isEditingNotes
+                  ? TextField(
+                      controller: _notesController,
+                      maxLines: 5,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your notes here...',
+                        border: InputBorder.none,
+                      ),
+                    )
+                  : Text(
+                      savedNotes.isEmpty
+                          ? 'Add private notes about ${student.name.split(' ').first}\'s learning style, goals, or areas needing improvement.'
+                          : savedNotes,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: savedNotes.isEmpty ? colorScheme.onSurfaceVariant : colorScheme.onSurface,
+                        fontStyle: savedNotes.isEmpty ? FontStyle.italic : FontStyle.normal,
+                      ),
+                    ),
             ),
           ],
         ),

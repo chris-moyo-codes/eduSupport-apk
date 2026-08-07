@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../theme/app_theme.dart';
 import '../../data/premium_repository.dart';
@@ -391,8 +392,8 @@ class _SuccessView extends StatelessWidget {
             width: double.infinity,
             child: FilledButton(
               onPressed: () {
-                // Pop back to the screen that opened premium flow
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                // Navigate back to the root shell, go_router will resolve home
+                context.go('/');
               },
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 15),
